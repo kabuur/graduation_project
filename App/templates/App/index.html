@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+
+{% block content%}
+   <div class="container-flued">
+    <div class="row">
+        <div class="col-lg-6">
+            {% if imag != null%}
+
+            <div class="col-md-4">
+                <form action="" method="POST">{% csrf_token %}
+                    <img src="{{imag}}" name="image"  alt="">
+                    <input type="text" hidden value="lllllll" name="ck">
+                    <input type="submit"   class="btn-info" value="Pridict">
+
+                    <h5>{{output}}</h5>
+                </form>
+            </div>
+            {% endif %}
+          
+        </div>
+
+
+
+        <div class="col-lg-4 main-patient">
+            <form action="" method="POST" class="row">{% csrf_token %}
+                <label for="ID" class="col-md-3">Search By ID</label>
+                <input type="text" class="col-md-5" name="ID" id="ID" value="{{id}}">
+                <input type="submit" value="Search ID" class="col-md-3">
+            </form>
+            {% for cat in patient%}
+
+                <div class="patient" >
+                    <p>patient Name :  </p>
+                    <p>{{cat.patientName}}</p>
+                </div>
+
+                <div class="patient" >
+                    <p>patientTell: </p>
+                    <p>{{cat.patientTell}}</p>   
+                </div>
+
+                <div class="patient" >
+                    <p> patient Age : </p>
+                    <p>{{cat.paientAge}}</p>
+                </div>
+
+                <div class="patient" >
+                    <p>patient Genter:  </p>
+                    <p>  {{cat.patientGenter}}</p>   
+                </div>
+                <div class="patient" >
+                    <p>patient Address: </p>
+                    <p>  {{cat.patientAddress}}</p>
+                </div>
+                
+                <div class="patient" >
+                    <p>patient RegDate:  </p>
+                    <p>{{cat.patientRegDate}}</p>   
+                </div>
+                <div class="patient" >
+                    <p>patient Xray Image:  </p>
+                    <img src="/media/{{cat.patientXrayImage}}" width='100' height="50" >
+                </div>
+                
+               
+    
+    
+        {% endfor %}
+        </div>
+    </div>
+   </div>
+
+
+
+    
+
+{% endblock content%}
+
+
+
+
+

@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="patient">
+
+    <form action="" method="post" enctype="multipart/form-data">
+        {%csrf_token%}
+
+
+            <label for="name">Patient Name</label>
+            <input required  type="text" name="name" id="name"><br>
+
+            <label for="id">Patient ID</label>
+            <input required type="text" name="id" id="id"><br>
+
+            <label for="tell">Patient tell</label>
+            <input required type="text" name="tell" id="tell"><br>
+
+            <label for="age">Patent Age</label>
+            <input required type="number" name="age" id="age"><br>
+
+            <label for="password1">Patient gender</label>
+            <select required name="gender" id="">
+                <option selected value="">______</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select><br>
+            
+
+            
+            <label for="address">Patient Address</label>
+            <input required type="text" name="address" id="address"><br>
+
+            <label for="x-ray">Patient X-ray Image</label>
+            <input required type="file" name="xrayImage" id="x-ray"><br>
+
+            <input type="submit" value="Register">
+
+
+    </form>
+
+</div>
+
+
+
+
+{% endblock content %}

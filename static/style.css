@@ -1,0 +1,9 @@
+.main-patient{
+    background-color: bisque;
+    
+    padding: 10px;
+    border-radius: 5px;
+}
+.patient{
+    display: flex;
+}
