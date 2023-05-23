@@ -3,6 +3,87 @@
 
 <div class="patient">
 
+
+
+    <form action="" method="post" class="px-md-2 HospitalRegistration">
+        {% csrf_token %}
+    
+
+    <div class="form-outline mb-4">
+    <input required  type="text" id="HospitalName" name='hospName' class="form-control" placeholder='Hospital Name'/>
+    </div>
+
+
+    <div class="row">
+    <div class="col-md-6 mb-4">
+
+        <div class="form-outline datepicker">
+        <input required required type="text" class="form-control" name = "tell" placeholder = "Tell" id="tell" />
+        
+        </div>
+
+    </div>
+    <div class="col-md-6 mb-4">
+        <input required required type="email" class="form-control"placeholder = "Email"  name = "email" id="email" />
+    
+
+    </div>
+    </div>
+
+
+        
+    <div class="row">
+        <div class="col-md-6 mb-4">
+
+        <div class="form-outline datepicker">
+            <input required required type="text" class="form-control" name = "userName" placeholder = "User Name" id="userName" />
+            
+        </div>
+
+        </div>
+        <div class="col-md-6 mb-4">
+        <input required required type="text" class="form-control"placeholder = "address"  name = "address" id="Address" />
+        
+
+        </div>
+    </div>
+
+
+        
+    <div class="row">
+        <div class="col-md-6 mb-4">
+
+        <div class="form-outline datepicker">
+            <input required required type="password" class="form-control" name = "password1" placeholder = "Password" id="password" />
+            <span style='color:red'>{{massage}}</span>
+        </div>
+
+        </div>
+        <div class="col-md-6 mb-4">
+        <input required required type="password"  class="form-control"placeholder = "Confirm Password"  name = "password2" id="password2" />
+        <span style='color:red'>{{massage}}</span>
+
+        </div>
+    </div>
+
+    
+
+
+
+    <button type="submit" class="btn btn-success btn-lg mb-1">Submit</button>
+
+</form>
+
+
+
+
+
+
+
+
+
+
+
     <form action="" method="post" enctype="multipart/form-data">
         {%csrf_token%}
 
@@ -19,13 +100,21 @@
             <label for="age">Patent Age</label>
             <input required type="number" name="age" id="age"><br>
 
-            <label for="password1">Patient gender</label>
+            <label for="gender">Patient gender</label>
+
             <select required name="gender" id="">
                 <option selected value="">______</option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
             </select><br>
-            
+
+            <label for="password1">Test Type</label>
+            <select required name="type" id="">
+
+                <option selected value="">______</option>
+                <option value="TUBERCULOSIS">TUBERCULOSIS</option>
+                <option value="PNEUMONIA">PNEUMONIA</option>
+            </select><br>
 
             
             <label for="address">Patient Address</label>
@@ -37,7 +126,7 @@
             <input type="submit" value="Register">
 
 
-    </form>
+    </form> 
 
 </div>
 

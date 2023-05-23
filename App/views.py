@@ -7,19 +7,6 @@
 # def Home(Request):
 #     return render(Request ,'App/index.html')
 
-
-
-from django.http import HttpResponse
-from django.shortcuts import render
-from django.template import loader
-# from .models import members
-from django.core.files.storage import FileSystemStorage
-from django.conf import settings
-from .models import Patient
-
-
-
-
 import warnings
 from PIL import Image, ImageEnhance
 warnings.filterwarnings('ignore')
@@ -32,99 +19,57 @@ import keras.utils as image
 
 
 
-def ImageProcessing(Request):
-    output = ''
-   
-    if Request.method == 'POST':
-        diseaseType = Request.POST['dis']
-        
-        # print(diseaseType)
-        #save image to the Images folder
-        img_file = Request.FILES['name']
-        fs = FileSystemStorage()
-        
-        filename = fs.save('./images/'+img_file.name, img_file)
-        print(filename)
-        uploaded_file_path = fs.path(filename)
-        # print('absolute file path', uploaded_file_path) 
-        
-        imageRes = Request.FILES['name']
-      
-      
-      
-      
-        #loading model 
-        path=uploaded_file_path
-        path=str(path)
-        print(path)
-        if diseaseType == 'Tubarculosis':
-            model=load_model('./TB8-1.h5')
-        else:
-            model=load_model('./model2.h5')
-        
-        img_file=image.load_img(path,target_size=(224,224))
-        x=image.img_to_array(img_file)
-        x=np.expand_dims(x, axis=0)
-        img_data=preprocess_input(x)
-        classes=model.predict(img_data)
-        global result
-        result=classes
-       
+from django.http import HttpResponse
+from django.shortcuts import render
+from django.template import loader
+# from .models import members
+from django.core.files.storage import FileSystemStorage
+from django.conf import settings
+from .models import  Patient,NormalPN,NormalTB,Tuberculosis,Pneumonia
+from django.contrib.auth.models import User
 
 
 
-        print(result[0][0])
-        
-        if diseaseType == 'Tubarculosis':
-            if result[0][0]>0.5:
-                output = "Result is Normal"
-                print("Result is Normal")
-                
-            else:
-                output = "Affected By Tubarculosis"
-                print("Affected By Tubarculosis")
-        else:
-            if result[0][0]>0.5:
-                output = "Result is Normal"
-                print("Result is Normal")
-                
-            else:
-                output = "Affected By PNEUMONIA"
-                print("Affected By PNEUMONIA")
 
 
-   
-   
-    context = {
-        
-        "output" :output,
-        
-    }
-    return context
+
+
+
 def  Home(Request):
-    diseaseType = 'Tubarculosis'
+    
     output = ''
     global pat 
     id = ''
     global imag
+    
     if(Request.method == "POST"):
-        print("the fruist post")
+      
         if Request.POST.get('ID'):
-           
-            pat = Patient.objects.filter(patientID =  Request.POST.get("ID")).values()
             
+           #geting patient
+            username = Request.user.username
+            
+            pat = Patient.objects.filter(patientID =  Request.POST.get("ID"),userName=User.objects.get(username = username)).values()
+            if(len(pat) == 0):
+                 person = "ma ahan mid jiro shiqsigaan"
+                 context= {
+                     "person": person
+                 }
+                 return render(Request,"App/index.html",context)
             imag = './media/'+pat[0]['patientXrayImage']
             id = pat[0]['patientID']
         
-        if(Request.POST.get('ck')):
-            print("name is not difined")
+        
+        elif(Request.POST.get('pridicts')):
+            
             path=imag
             path=str(path)
             print(path)
-            if diseaseType == 'Tubarculosis':
-                model=load_model('./TB8-1.h5')
+            
+            if pat[0]['testType'] == 'TUBERCULOSIS':
+                model=load_model('./TB.h5')
             else:
-                model=load_model('./model2.h5')
+                model=load_model('./PN.h5')
             
             img_file=image.load_img(path,target_size=(224,224))
             x=image.img_to_array(img_file)
@@ -134,24 +79,100 @@ def  Home(Request):
             global result
             result=classes
             
-            print(result[0][0])
+            print( ( result[0][0]))
             
-            if diseaseType == 'Tubarculosis':
+            if pat[0]['testType'] == 'TUBERCULOSIS':
                 if result[0][0]>0.5:
                     output = "Result is Normal"
                     print("Result is Normal")
-                    
+                    id =   pat[0]['patientID']
+                    normal =  NormalTB.objects.filter(patientID = id).values()
+                 
+                    length = len(normal)
+                    if (length != 1):
+                        normal = NormalTB(
+                                userName =  pat[0]['UserName'] ,
+                                patientID = pat[0]['patientID'] ,
+                                patientName = pat[0]['patientName'] ,
+                                patientTell =pat[0]['patientTell'] ,
+                                paientAge = pat[0]['paientAge'] ,
+                                pridected = pat[0]['testType'] ,
+                                patientGenter = pat[0]['patientGenter'] ,
+                                patientAddress = pat[0]['patientAddress'] ,
+                                patientRegDate = pat[0]['patientRegDate'] ,
+                                patientXrayImage = pat[0]['patientXrayImage'] ,
+                        )
+                        normal.save()
                 else:
+                   
                     output = "Affected By Tubarculosis"
                     print("Affected By Tubarculosis")
+                    
+                    id =   pat[0]['patientID']
+                    TB =  Tuberculosis.objects.filter(patientID = id).values()
+                 
+                    length = len(TB)
+                    if (length != 1):
+                        TB = Tuberculosis(
+                                userName =  pat[0]['userName_id'] ,
+                                patientID = pat[0]['patientID'] ,
+                                patientName = pat[0]['patientName'] ,
+                                patientTell =pat[0]['patientTell'] ,
+                                paientAge = pat[0]['paientAge'] ,
+                                pridected = pat[0]['testType'] ,
+                                patientGenter = pat[0]['patientGenter'] ,
+                                patientAddress = pat[0]['patientAddress'] ,
+                                patientRegDate = pat[0]['patientRegDate'] ,
+                                patientXrayImage = pat[0]['patientXrayImage'] ,
+                        )
+                        TB.save()
+                   
             else:
                 if result[0][0]>0.5:
                     output = "Result is Normal"
                     print("Result is Normal")
+                    id =   pat[0]['patientID']
+                    pn =  NormalPN.objects.filter(patientID = id).values()
+                 
+                    length = len(pn)
+                    if (length != 1):
+                            normal = NormalPN(
+                                    userName =  pat[0]['userName_id'] ,
+                                    patientID = pat[0]['patientID'] ,
+                                    patientName = pat[0]['patientName'] ,
+                                    patientTell =pat[0]['patientTell'] ,
+                                    paientAge = pat[0]['paientAge'] ,
+                                    pridected = pat[0]['testType'] ,
+                                    patientGenter = pat[0]['patientGenter'] ,
+                                    patientAddress = pat[0]['patientAddress'] ,
+                                    patientRegDate = pat[0]['patientRegDate'] ,
+                                    patientXrayImage = 'TB/Tuberculosis/'+pat[0]['patientXrayImage'] 
+                            )
+                            normal.save()
                     
                 else:
                     output = "Affected By PNEUMONIA"
                     print("Affected By PNEUMONIA")
+                    id =   pat[0]['patientID']
+                    pn =  Pneumonia.objects.filter(patientID = id).values()
+                 
+                    length = len(pn)
+                    if (length != 1):
+                            PN = Pneumonia(
+                                    userName =  pat[0]['userName_id'] ,
+                                    patientID = pat[0]['patientID'] ,
+                                    patientName = pat[0]['patientName'] ,
+                                    patientTell =pat[0]['patientTell'] ,
+                                    paientAge = pat[0]['paientAge'] ,
+                                    pridected = pat[0]['testType'] ,
+                                    patientGenter = pat[0]['patientGenter'] ,
+                                    patientAddress = pat[0]['patientAddress'] ,
+                                    patientRegDate = pat[0]['patientRegDate'] ,
+                                    patientXrayImage = 'TB/Tuberculosis/'+pat[0]['patientXrayImage'] 
+                            )
+                            PN.save()
+        else:
+             return render(Request,"App/index.html")
             
 
         
@@ -178,10 +199,27 @@ def X_Rey(Request):
         age = Request.POST.get('age')
         gender = Request.POST.get('gender')
         address = Request.POST.get('address')
+        test = Request.POST.get('type')
         xrayImage = Request.FILES['xrayImage']
+      
+        username = Request.user.username
+       
+        print(username)
         
+   
         
-        
+        pat = Patient(
+                patientID = id,
+                patientName = name,
+                patientTell = tell,
+                paientAge = age,
+                testType = test,
+                patientGenter = gender,
+                patientAddress = address,
+                patientXrayImage = xrayImage,
+                userName = User.objects.get(username = username)
+        )
+        pat.save()
         
         
         # img_file = Request.FILES['X_ray']

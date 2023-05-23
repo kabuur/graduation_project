@@ -1,0 +1,32 @@
+{% extends 'accouts.html' %}
+{% block accounts %}
+        
+
+
+{% load crispy_forms_tags %}
+
+
+{% if massage %}
+    <ul class = "massage">
+        
+        {% for massage  in massage  %}
+        <li {% if massage.tags %}class = "massage.tags"{% endif %}> {{massage}} </li>
+            
+        {% endfor %}
+            
+    </ul>
+{% endif %}
+
+<div class = "container">
+    <div class="row">
+        <div class = "col-lg-5 mx-auto">
+            <h3>Login</h3>
+            <form method = 'post'>
+                {% csrf_token %}{{form|crispy}}
+                <button class = "btn btn-success">Lofin</button>
+                <a href='/Regestration'>Regestration</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock accounts %}
