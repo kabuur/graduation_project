@@ -1,29 +1,25 @@
 
-<nav class="navbar navbar-expand-lg navbar-light bg-primary">
+<nav class="navbar navbar-expand-lg navbar-light " style='box-shadow: rgba(33, 35, 38, 0.1) 0px 20px 20px -10px;'>
   <div class="container color-white">
 
-    <a class="navbar-brand" href="#">Navbar scroll</a>
+    <a class="navbar-brand" href="#">PNEUMONIA AND TUBERCULOSIS DETECTION APP</a>
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse " id="navbarScroll">
+    <div class="collapse navbar-collapse  justify-content-end " id="navbarScroll">
 
-      <ul class="navbar-nav mx-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
-        <li class="nav-item"><a  class= 'nav-link text-white ' href="/xray">Dahboard</a></li>
-        <li class="nav-item"><a  class= 'nav-link text-white' href="/">predict</a></li>
-        <li class="nav-item"><a  class= 'nav-link text-white' href="/xray">Registration Patient</a></li>
-      </ul>
-      <ul class="navbar-nav my-2 my-lg-0 navbar-nav-scroll mx-right " style="--bs-scroll-height: 100px;">
+  
+      <ul class="navbar-nav  navbar-nav-scroll  " >
         {% if user.is_authenticated %}
            
-            <li class="nav-item  text-light mr-2 mt-2">wellcome {{user.username}}</li>
-            <li class="nav-item"><a  class= 'nav-link text-white' href="/login">Logout</a></li>
+            <li class="nav-item    mt-2">wellcome {{user.username}}</li>
+            <li class="nav-item"><a  class= 'nav-link ' href="/login">Logout</a></li>
         {% endif %}
        
       </ul>
-     
     </div>
+
   </div>
 </nav>

@@ -25,15 +25,24 @@ from django.template import loader
 # from .models import members
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
-from .models import  Patient,NormalPN,NormalTB,Tuberculosis,Pneumonia
+from .models import  Patient,TuberculosisTests,PneumoniaTests
 from django.contrib.auth.models import User
+from datetime import datetime
 
 
 
 
+def TBPridicted():
+    TBPridicted =  Patient.objects.filter(pridected = 'TUBERCULOSIS').values
+    # Patient.objects.raw( "SELECT ID ,SUM()")
+    
+    return TBPridicted
 
 
-
+def notPridicted():
+    notPridicted =  Patient.objects.filter(isPridicted = False).values
+    
+    return notPridicted
 
 def  Home(Request):
     
@@ -53,7 +62,8 @@ def  Home(Request):
             if(len(pat) == 0):
                  person = "ma ahan mid jiro shiqsigaan"
                  context= {
-                     "person": person
+                     "person": person,
+                     "notPridicted": notPridicted()
                  }
                  return render(Request,"App/index.html",context)
             imag = './media/'+pat[0]['patientXrayImage']
@@ -61,7 +71,9 @@ def  Home(Request):
         
         
         elif(Request.POST.get('pridicts')):
-            
+            isPridictedUpdate = Patient.objects.get(patientID=pat[0]['patientID'])
+            isPridictedUpdate.isPridicted = True
+            isPridictedUpdate.save()
             path=imag
             path=str(path)
             print(path)
@@ -86,40 +98,40 @@ def  Home(Request):
                     output = "Result is Normal"
                     print("Result is Normal")
                     id =   pat[0]['patientID']
-                    normal =  NormalTB.objects.filter(patientID = id).values()
+                    TB =  TuberculosisTests.objects.filter(patientID = id).values()
                  
-                    length = len(normal)
+                    length = len(TB)
                     if (length != 1):
-                        normal = NormalTB(
-                                userName =  pat[0]['UserName'] ,
+                        TB = TuberculosisTests(
+                                userName =  pat[0]['userName_id'] ,
                                 patientID = pat[0]['patientID'] ,
                                 patientName = pat[0]['patientName'] ,
                                 patientTell =pat[0]['patientTell'] ,
                                 paientAge = pat[0]['paientAge'] ,
-                                pridected = pat[0]['testType'] ,
+                                pridected = 'Normal' ,
                                 patientGenter = pat[0]['patientGenter'] ,
                                 patientAddress = pat[0]['patientAddress'] ,
                                 patientRegDate = pat[0]['patientRegDate'] ,
                                 patientXrayImage = pat[0]['patientXrayImage'] ,
                         )
-                        normal.save()
+                        TB.save()
                 else:
                    
                     output = "Affected By Tubarculosis"
                     print("Affected By Tubarculosis")
                     
                     id =   pat[0]['patientID']
-                    TB =  Tuberculosis.objects.filter(patientID = id).values()
+                    TB =  TuberculosisTests.objects.filter(patientID = id).values()
                  
                     length = len(TB)
                     if (length != 1):
-                        TB = Tuberculosis(
+                        TB = TuberculosisTests(
                                 userName =  pat[0]['userName_id'] ,
                                 patientID = pat[0]['patientID'] ,
                                 patientName = pat[0]['patientName'] ,
                                 patientTell =pat[0]['patientTell'] ,
                                 paientAge = pat[0]['paientAge'] ,
-                                pridected = pat[0]['testType'] ,
+                                pridected = 'TUBERCULOSIS' ,
                                 patientGenter = pat[0]['patientGenter'] ,
                                 patientAddress = pat[0]['patientAddress'] ,
                                 patientRegDate = pat[0]['patientRegDate'] ,
@@ -132,39 +144,39 @@ def  Home(Request):
                     output = "Result is Normal"
                     print("Result is Normal")
                     id =   pat[0]['patientID']
-                    pn =  NormalPN.objects.filter(patientID = id).values()
+                    pn =  PneumoniaTests.objects.filter(patientID = id).values()
                  
                     length = len(pn)
                     if (length != 1):
-                            normal = NormalPN(
+                            PN = PneumoniaTests(
                                     userName =  pat[0]['userName_id'] ,
                                     patientID = pat[0]['patientID'] ,
                                     patientName = pat[0]['patientName'] ,
                                     patientTell =pat[0]['patientTell'] ,
                                     paientAge = pat[0]['paientAge'] ,
-                                    pridected = pat[0]['testType'] ,
+                                    pridected = 'PNEUMONIA' ,
                                     patientGenter = pat[0]['patientGenter'] ,
                                     patientAddress = pat[0]['patientAddress'] ,
                                     patientRegDate = pat[0]['patientRegDate'] ,
                                     patientXrayImage = 'TB/Tuberculosis/'+pat[0]['patientXrayImage'] 
                             )
-                            normal.save()
+                            PN.save()
                     
                 else:
                     output = "Affected By PNEUMONIA"
                     print("Affected By PNEUMONIA")
                     id =   pat[0]['patientID']
-                    pn =  Pneumonia.objects.filter(patientID = id).values()
+                    pn =  PneumoniaTests.objects.filter(patientID = id).values()
                  
                     length = len(pn)
                     if (length != 1):
-                            PN = Pneumonia(
+                            PN = PneumoniaTests(
                                     userName =  pat[0]['userName_id'] ,
                                     patientID = pat[0]['patientID'] ,
                                     patientName = pat[0]['patientName'] ,
                                     patientTell =pat[0]['patientTell'] ,
                                     paientAge = pat[0]['paientAge'] ,
-                                    pridected = pat[0]['testType'] ,
+                                    pridected = 'Normal' ,
                                     patientGenter = pat[0]['patientGenter'] ,
                                     patientAddress = pat[0]['patientAddress'] ,
                                     patientRegDate = pat[0]['patientRegDate'] ,
@@ -183,12 +195,19 @@ def  Home(Request):
             "id": id
         
         }
+        
         return render(Request,"App/index.html",context)
     
        
         
     else:
-        return render(Request,"App/index.html")
+      
+        context = {
+          
+            "notPridicted": notPridicted()
+        }
+     
+        return render(Request,"App/index.html",context)
 
 
 def X_Rey(Request):
@@ -232,5 +251,75 @@ def X_Rey(Request):
 
 
    
-
+def dashboard (Request):
    
+    #TB chart
+    TBresults = []
+    countTBresults = []
+    username = Request.user.username
+    user = User.objects.get(username = username)
+    id =  user.id
+    for resalts in TuberculosisTests.objects.raw( "SELECT ID,  COUNT(patientID)count ,pridected,userName FROM App_TuberculosisTests  GROUP BY pridected"):
+        
+        if(resalts.userName == id):
+            
+            TBresults.append(resalts.pridected)
+            countTBresults.append(resalts.count)
+    #PN chart
+    PNresults = []
+    countPNresults = []
+    username = Request.user.username
+    user = User.objects.get(username = username)
+   
+    for resalts in PneumoniaTests.objects.raw( "SELECT ID,  COUNT(patientID)count ,pridected,userName FROM App_PneumoniaTests  GROUP BY pridected"):
+        
+        if(resalts.userName == id):
+          
+            PNresults.append(resalts.pridected)
+            countPNresults.append(resalts.count)
+    
+    
+    #Main chart
+    RegisterYear_monthCount = []
+    countRegister = []  
+    for results in Patient.objects.raw( "SELECT ID, userName_id ,COUNT(patientID)count,strftime('%Y-%m', patientRegDate) year_month FROM App_Patient GROUP BY year_month  "):
+        
+       
+       
+        if (results.userName_id == id):
+            countRegister.append(results.count)
+            RegisterYear_monthCount.append(results.year_month)
+    
+    
+    
+    countTB = len(TuberculosisTests.objects.filter(userName = id,pridected = 'TUBERCULOSIS').values())
+    countNormalLtb = len(TuberculosisTests.objects.filter(userName = id,pridected = 'Normal').values())
+    countPN = len(PneumoniaTests.objects.filter(userName = id,pridected = 'PNEUMONIA').values())
+    countNormalPN = len(PneumoniaTests.objects.filter(userName = id,pridected = 'Normal').values())
+
+    
+    
+    
+    
+    
+    
+    
+    context = {
+        
+        
+        "countTB": countTB,
+        "countNormalLtb":countNormalLtb,
+        "countNormalPN":countNormalPN,
+        "countPN": countPN,
+        
+        
+        'PNresults':PNresults,
+        'countPNresults':countPNresults,
+        'TBresults':TBresults,
+        
+        'countTBresults':countTBresults,
+        'RegisterYear_monthCount':RegisterYear_monthCount,
+        'countRegister':countRegister
+    }
+    return render(Request, 'App/Dashboard.html',context)
+

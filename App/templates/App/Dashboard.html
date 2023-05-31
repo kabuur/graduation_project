@@ -1,0 +1,355 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js"></script>
+{% for date in date %}
+    <p>{{date}}</p>
+{% endfor %}
+<div class = 'container'>
+  <h2 class=" mt-4  mb-4 text-gray-800">Dashboard</h2>
+
+
+
+
+
+  <div class="row">
+
+    <!-- Earnings (Monthly) Card Example -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card  shadow h-100 py-2"  style = "border-left:2px solid blue">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col ">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase ">
+                          <span style="font-size:12px">EFFECTED BY TUBERCULOSIS</span>
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{countTB}}</div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Earnings (Monthly) Card Example -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2 " style = "border-left:5px solid green">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class=" font-weight-bold text-success text-uppercase mb-1">
+                          <span style="font-size:12px">NOT EFFECTED BY TUBERCULOSIS</span>
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{countNormalLtb}}</div>
+                    </div>
+                  
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Earnings (Monthly) Card Example -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-info shadow h-100 py-2"  style = "border-left:5px solid #36b9cc">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                          <span style="font-size:12px">EFFECTED BY PNEUMONIA</span>
+                        </div>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col-auto">
+                                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{countPN}}</div>
+                            </div>
+                           
+                        </div>
+                    </div>
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pending Requests Card Example -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-warning shadow h-100 py-2"  style = "border-left:5px solid #f6c23e">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class=" font-weight-bold text-warning text-uppercase mb-1">
+                          <span style="font-size:12px">NOT EFFECTED BY PNEUMONIA</span></div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{countNormalPN}}</div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+    <div class = 'row' >
+
+      <div class = 'col-lg-12'>
+
+        <div class = "card shadow mb-4">
+
+          <div class="card-header py-3 d-flex flex-row align-items-center justify-content-center">
+            
+            <h6 class="m-0 font-weight-bold text-primary">TASKS PER EACH MONTH</h6>
+          </div>
+
+          <div class="card-body">
+            <div class="chart-area">
+                <canvas id="lineChart" style="height:300px"></canvas>
+            </div>
+        </div>
+        
+          
+        </div>
+      </div>
+
+    </div>
+  
+    <div class = 'row'>
+
+
+      <div class = 'col-lg-6'>
+
+        <div class = "card shadow mb-4">
+
+          <div class="card-header py-3 d-flex flex-row align-items-center justify-content-center">
+            <h6 class="m-0 font-weight-bold text-primary">TUBERCULOSIS TESTS</h6>
+           
+          </div>
+
+          <div class="card-body">
+            <div class="chart-area">
+                <canvas id="barChartTB" ></canvas>
+            </div>
+        </div>
+        
+          
+        </div>
+      </div>
+
+
+
+      <div class = 'col-lg-6'>
+
+        <div class = "card shadow mb-4">
+
+          <div class="card-header py-3 d-flex flex-row align-items-center justify-content-center">
+            <h6 class="m-0 font-weight-bold text-primary">PNEUMONIA TESTS</h6>
+            
+          </div>
+
+          <div class="card-body">
+            <div class="chart-area">
+                <canvas id="barChartPN" ></canvas>
+            </div>
+        </div>
+        
+          
+        </div>
+      </div>
+
+
+
+
+
+    
+    </div>
+</div>
+
+<script>
+
+    //line 
+
+    // Chart
+  //line
+  var ctx = document.getElementById("lineChart");
+  var myLineChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: [{% for Year_month in  RegisterYear_monthCount %}"{{Year_month}}",{% endfor %}],
+      datasets: [{
+        label: "Earnings",
+        lineTension: 0.3,
+        backgroundColor: "rgba(78, 115, 223, 0.05)",
+        borderColor: "rgba(78, 115, 223, 1)",
+        pointRadius: 3,
+        pointBackgroundColor: "rgba(78, 115, 223, 1)",
+        pointBorderColor: "rgba(78, 115, 223, 1)",
+        pointHoverRadius: 3,
+        pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+        pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+        pointHitRadius: 10,
+        pointBorderWidth: 2,
+        data: [{% for countRegister in  countRegister %}{{countRegister}},{% endfor %}],
+      }],
+    },
+    options: {
+      maintainAspectRatio: false,
+      layout: {
+        padding: {
+          left: 10,
+          right: 25,
+          top: 25,
+          bottom: 0
+        }
+      },
+      scales: {
+        xAxes: [{
+          time: {
+            unit: 'date'
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false
+          },
+          ticks: {
+            maxTicksLimit: 7
+          }
+        }],
+        yAxes: [{
+          ticks: {
+            maxTicksLimit: 5,
+            padding: 10,
+            // Include a dollar sign in the ticks
+            callback: function(value, index, values) {
+              return '$' + number_format(value);
+            }
+          },
+          gridLines: {
+            color: "rgb(234, 236, 244)",
+            zeroLineColor: "rgb(234, 236, 244)",
+            drawBorder: false,
+            borderDash: [2],
+            zeroLineBorderDash: [2]
+          }
+        }],
+      },
+      legend: {
+        display: false
+      },
+      tooltips: {
+        backgroundColor: "rgb(255,255,255)",
+        bodyFontColor: "#858796",
+        titleMarginBottom: 10,
+        titleFontColor: '#6e707e',
+        titleFontSize: 14,
+        borderColor: '#dddfeb',
+        borderWidth: 1,
+        xPadding: 15,
+        yPadding: 15,
+        displayColors: false,
+        intersect: false,
+        mode: 'index',
+        caretPadding: 10,
+        callbacks: {
+          label: function(tooltipItem, chart) {
+            var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+            return datasetLabel + ': $' + number_format(tooltipItem.yLabel);
+          }
+        }
+      }
+    }
+  });
+  
+
+
+
+
+
+ 
+//bar TB
+var ctxB = document.getElementById("barChartTB").getContext('2d');
+var myBarChart = new Chart(ctxB, {
+  type: 'bar',
+  data: {
+      labels: [{% for TBresults in  TBresults %}"{{TBresults}}",{% endfor %}],
+    datasets: [{
+      label: 'TUBERCULOSIS TESTS',
+      
+      data: [{% for countTBresults in  countTBresults %}{{countTBresults}},{% endfor %},20],
+      backgroundColor: [
+        
+        'green',
+        'red'
+      
+      ],
+      borderColor: [
+        'rgba(255,99,132,1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)',
+        'rgba(75, 192, 192, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(255, 159, 64, 1)'
+      ],
+      borderWidth: 1
+    }]
+  },
+  options: {
+    scales: {
+      yAxes: [{
+        ticks: {
+          beginAtZero: true
+        }
+      }]
+    }
+  }
+});
+
+
+//PN bar
+
+//bar
+var ctxB = document.getElementById("barChartPN").getContext('2d');
+var myBarChart = new Chart(ctxB, {
+  type: 'bar',
+  data: {
+      labels: [{% for PNresults in  PNresults %}"{{PNresults}}",{% endfor %}],
+    datasets: [{
+      label: 'PNEUMONIA TESTS',
+      
+      data: [{% for countPNresults in  countPNresults %}{{countPNresults}},{% endfor %},20],
+      backgroundColor: [
+        
+        '#05d5fa',
+        '#cc0bd6'
+      
+      ],
+      borderColor: [
+        'rgba(255,99,132,1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)',
+        'rgba(75, 192, 192, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(255, 159, 64, 1)'
+      ],
+      borderWidth: 1
+    }]
+  },
+  options: {
+    scales: {
+      yAxes: [{
+        ticks: {
+          beginAtZero: true
+        }
+      }]
+    }
+  }
+});
+
+
+
+
+</script>
+
+
+{% endblock content %}

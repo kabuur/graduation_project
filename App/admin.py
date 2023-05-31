@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import  Patient,NormalPN,NormalTB,Tuberculosis,Pneumonia
+from .models import  Patient,TuberculosisTests,PneumoniaTests
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.admin import UserAdmin
 # Register your models here.
@@ -19,7 +19,5 @@ from django.contrib.auth.admin import UserAdmin
 
 
 admin.site.register(Patient),
-admin.site.register(Pneumonia),
-admin.site.register(Tuberculosis),
-admin.site.register(NormalTB),
-admin.site.register(NormalPN),
+admin.site.register(PneumoniaTests),
+admin.site.register(TuberculosisTests),

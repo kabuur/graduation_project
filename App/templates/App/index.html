@@ -31,51 +31,58 @@
                         </div>
                        
                     </div>
+                    <!--   ########################################################################################  -->
 
+                
+            
+                    
+                
+                    
                     {% for cat in patient%}
-                    <div class = 'row patientInfo ' style="background-color:#D9D9D9; margin-top:20px; padding: 20px">
-                        <div class = 'row'>
-                            <p class = 'col-lg-6'>Patient Name : </p>
-                            <p class = 'col-lg-6'>{{cat.patientName}}</p>
-                        </div>
+                    
+                        <div class = 'row patientInfo ' style="background-color:#D9D9D9; margin-top:20px; padding: 20px">
+                            <div class = 'row'>
+                                <p class = 'col-lg-6'>Patient Name : </p>
+                                <p class = 'col-lg-6'>{{cat.patientName}}</p>
+                            </div>
 
-                        <div class = 'row' style = "margin-top:10px">
-                            <p class = 'col-lg-6'>Patient Tell : </p>
-                            <p class = 'col-lg-6'>{{cat.patientTell}}</p>
-                        </div>
+                            <div class = 'row' style = "margin-top:10px">
+                                <p class = 'col-lg-6'>Patient Tell : </p>
+                                <p class = 'col-lg-6'>{{cat.patientTell}}</p>
+                            </div>
 
-                        <div class = 'row' style = "margin-top:10px">
-                            <p class = 'col-lg-6'>Patient Age : </p>
-                            <p class = 'col-lg-6'>{{cat.paientAge}}</p>
-                        </div>
+                            <div class = 'row' style = "margin-top:10px">
+                                <p class = 'col-lg-6'>Patient Age : </p>
+                                <p class = 'col-lg-6'>{{cat.paientAge}}</p>
+                            </div>
 
-                        <div class = 'row' style = "margin-top:10px">
-                            <p class = 'col-lg-6'>Patient Gender :</p>
-                            <p class = 'col-lg-6'> {{cat.patientGenter}}</p>
-                        </div>
+                            <div class = 'row' style = "margin-top:10px">
+                                <p class = 'col-lg-6'>Patient Gender :</p>
+                                <p class = 'col-lg-6'> {{cat.patientGenter}}</p>
+                            </div>
 
-                        <div class = 'row' style = "margin-top:10px">
-                            <p class = 'col-lg-6'>Patient Address :</p>
-                            <p class = 'col-lg-6'> {{cat.patientAddress}}</p>
-                        </div>
+                            <div class = 'row' style = "margin-top:10px">
+                                <p class = 'col-lg-6'>Patient Address :</p>
+                                <p class = 'col-lg-6'> {{cat.patientAddress}}</p>
+                            </div>
 
-                        <div class = 'row' style = "margin-top:10px">
-                            <p class = 'col-lg-6'>Test Type:</p>
-                            <p class = 'col-lg-6'>{{cat.testType}}</p>
-                        </div>
+                            <div class = 'row' style = "margin-top:10px">
+                                <p class = 'col-lg-6'>Test Type:</p>
+                                <p class = 'col-lg-6'>{{cat.testType}}</p>
+                            </div>
 
-                        
-                        <div class = 'row ' style = "margin-top:10px;  ">
-                            <p class = 'col-lg-6'>Registration Date:</p>
-                            <p class = 'col-lg-6'>{{cat.patientRegDate}}</p>
+                            
+                            <div class = 'row ' style = "margin-top:10px;  ">
+                                <p class = 'col-lg-6'>Registration Date:</p>
+                                <p class = 'col-lg-6'>{{cat.patientRegDate}}</p>
+                            </div>
+                            
                         </div>
-                        
-                    </div>
                     {% endfor %}
                     <div class="alert" >
                         {{person}}
                       </div>
-                     {% comment %} patient details {% endcomment %}
+                  
                        
 
                 </div>
@@ -100,92 +107,71 @@
 
                 </div>
                 {% endfor %}
-            {% comment %} main row {% endcomment %}
+          
             </div>
-        {% comment %} container {% endcomment %}
+    
+
+
+
+        
+            {% if patient   %}
+
+            {% else %}
+                <div class = 'row '>
+                    <table class="table col-lg-12 table-bordered border-dark">
+                        <thead class = "table-dark">
+                            <tr>
+                            
+                            <th scope="col">ID</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Tell</th>
+                            <th scope="col">Age</th>
+                            <th scope="col">Test Type</th>
+                            <th scope="col">Sex</th>
+                            <th scope="col">Address</th>
+                            <th scope="col">RegDate</th>
+                            <th scope="col">Image</th>
+                            </tr>
+                        </thead>
+                        
+                        {% for notPridicted in notPridicted %}
+                           
+                        
+                            <tbody>
+                            <tr>
+                            
+                                
+                                <td >{{notPridicted.patientID}}</td>
+                                <td >{{notPridicted.patientName}}</td>
+                                <td >{{notPridicted.patientTell}}</td>
+                                <td >{{notPridicted.paientAge}}</td>
+                                <td >{{notPridicted.testType}}</td>
+                                <td >{{notPridicted.patientGenter}}</td>
+                                <td >{{notPridicted.patientAddress}}</td>
+                                <td >{{notPridicted.patientRegDate}}</td>
+                
+                                
+                                <td >{{notPridicted.patientXrayImage}}</td>
+                            </tr>
+                            </tr>
+                            </tbody>
+                        
+                
+                
+                        
+                
+                        {% endfor %}
+                    </table>
+                </div>
+                
+            {% endif %}
         </div>
+    
     </section>
 
 
 
 
-
-   {% comment %} <div class="container-flued">
-    <div class="row">
-        <div class="col-lg-6">
-            {% if imag != null%}
-
-            <div class="col-md-4">
-                <form action="" method="POST">{% csrf_token %}
-                    <img src="{{imag}}"  name="image"  alt="">
-                    <input type="text" hidden value="lllllll" name="pridicts">
-                    <input type="submit"   class="btn-info" value="Pridict">
-
-                    <h5>{{output}}</h5>
-                </form>
-            </div>
-            {% endif %}
-          
-        </div>
-
-
-
-        <div class="col-lg-4 main-patient">
-            <form action="" method="POST" class="row">{% csrf_token %}
-                <label for="ID" class="col-md-3">Search By ID</label>
-                <input type="text" class="col-md-5" name="ID" id="ID" value="{{id}}">
-                <input type="submit" value="Search ID" class="col-md-3">
-            </form>
-            {% for cat in patient%}
-
-                <div class="patient" >
-                    <p>patient Name :  </p>
-                    <p>{{cat.patientName}}</p>
-                </div>
-
-                <div class="patient" >
-                    <p>patientTell: </p>
-                    <p>{{cat.patientTell}}</p>   
-                </div>
-
-                <div class="patient" >
-                    <p> patient Age : </p>
-                    <p>{{cat.paientAge}}</p>
-                </div>
-
-                <div class="patient" >
-                    <p>patient Genter:  </p>
-                    <p>  {{cat.patientGenter}}</p>   
-                </div>
-                <div class="patient" >
-                    <p>patient Address: </p>
-                    <p>  {{cat.patientAddress}}</p>
-                </div>
-                
-
-                <div class="patient" >
-                    <p>Test Type:  </p>
-                    <p>{{cat.testType}}</p>   
-                </div>
-
-
-                <div class="patient" >
-                    <p>patient RegDate:  </p>
-                    <p>{{cat.patientRegDate}}</p>   
-                </div>
-                <div class="patient" >
-                    <p>patient Xray Image:  </p>
-                    <img src="/media/{{cat.patientXrayImage}}" width='50' height="50" >
-                </div>
-                
-               
-    
-    
-            {% endfor %}
-            <h1>{{person}}</h1>
-        </div>
-    </div>
-   </div> {% endcomment %}
 
 
 
