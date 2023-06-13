@@ -4,6 +4,20 @@
 {% block content%}
 
 
+
+{% if massage %}
+    <ul class = "massage">
+        
+        {% for massage  in massage  %}
+        <li {% if massage.tags %}class = "massage.tags"{% endif %}> {{massage}} </li>
+            
+        {% endfor %}
+            
+    </ul>
+{% endif %}
+
+
+
     <section style="margin-top:30px;">
         <div class = 'container' >
             <div class = "row ">
@@ -121,7 +135,7 @@
                     <table class="table col-lg-12 table-bordered border-dark">
                         <thead class = "table-dark">
                             <tr>
-                            
+                            <th scope="col">#</th>
                             <th scope="col">ID</th>
                             <th scope="col">Name</th>
                             <th scope="col">Tell</th>
@@ -130,7 +144,9 @@
                             <th scope="col">Sex</th>
                             <th scope="col">Address</th>
                             <th scope="col">RegDate</th>
-                            <th scope="col">Image</th>
+                            <th scope="col">Update</th>
+                            <th scope="col">Delete</th>
+                          
                             </tr>
                         </thead>
                         
@@ -140,7 +156,7 @@
                             <tbody>
                             <tr>
                             
-                                
+                                <td >{{forloop.counter}}</td>
                                 <td >{{notPridicted.patientID}}</td>
                                 <td >{{notPridicted.patientName}}</td>
                                 <td >{{notPridicted.patientTell}}</td>
@@ -149,9 +165,11 @@
                                 <td >{{notPridicted.patientGenter}}</td>
                                 <td >{{notPridicted.patientAddress}}</td>
                                 <td >{{notPridicted.patientRegDate}}</td>
+                                <td scope="col"><a href="{% url 'App:update2' notPridicted.patientID  %}"><span class= "btn btn-success">Update</span></a></td>
+                                <td scope="col"><a href="{% url 'App:delete' notPridicted.patientID  %}"><span class= "btn btn-danger">Delete</span></a></td>
                 
                                 
-                                <td >{{notPridicted.patientXrayImage}}</td>
+                               
                             </tr>
                             </tr>
                             </tbody>

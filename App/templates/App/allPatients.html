@@ -1,0 +1,111 @@
+
+<!--All patients-->
+
+
+<section class="container" >
+
+  <div class='row'>
+    <div class='col-lg-6'>
+
+      <div  class="row">
+        <div class = "col-lg-6">
+        <form  method ="POST"  id = "all"  >{% csrf_token %}
+            <select name = 'allPatients' id = "allPatients">
+              <option value="all">ALL</option>
+              <option value = "TB">TUBERCULOSIS</option>
+              <option value = "PN">PNEUMONIA</option>
+              <option value = "NORMAL">NORMAL</option>
+            </select>
+        </div>
+
+        <div class = "col-lg-6">
+          <input type="submit" value="Search ID" class=" btn btn-primary">
+        </div>
+      </form>
+        
+        
+    </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <h1>{{success}}</h1>
+    <div class ="col-lg-12">
+
+      <table class="table col-lg-12 table-bordered border-dark">
+        <thead class = "table-dark">
+            <tr>
+
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Tell</th>
+            <th scope="col">Age</th>
+            <th scope="col">pridected</th>
+            <th scope="col">Sex</th>
+            <th scope="col">Address</th>
+            <th scope="col">RegDate</th>
+            <th scope="col">Update</th>
+            <th scope="col">Delete</th>
+            </tr>
+        </thead>
+        
+        
+           
+        
+            <tbody>
+              {% for TBPatients in allPatients.TBPatients %}
+            <tr>
+            
+
+                <td >{{TBPatients.patientID}}</td>
+                <td >{{TBPatients.patientName}}</td>
+                <td >{{TBPatients.patientTell}}</td>
+                <td >{{TBPatients.paientAge}}</td>
+                <td >{{TBPatients.pridected}}</td>
+                <td >{{TBPatients.patientGenter}}</td>
+                <td >{{TBPatients.patientAddress}}</td>
+                <td >{{TBPatients.patientRegDate}}</td>
+                <td scope="col"><a href="{% url 'App:update' TBPatients.patientID  %}"><span class= "btn btn-success">Update</span></a></td>
+                <td scope="col"><a href="{% url 'App:dashboard-delete' TBPatients.patientID  %}"><span class= "btn btn-danger">Delete</span></a></td>
+
+                
+               
+            </tr>
+         
+            {% endfor %}
+
+            {% for TBPatients in allPatients.PNPatients %}
+            <tr>
+                
+                
+                <td >{{TBPatients.patientID}}</td>
+                <td >{{TBPatients.patientName}}</td>
+                <td >{{TBPatients.patientTell}}</td>
+                <td >{{TBPatients.paientAge}}</td>
+                <td >{{TBPatients.pridected}}</td>
+                <td >{{TBPatients.patientGenter}}</td>
+                <td >{{TBPatients.patientAddress}}</td>
+                <td >{{TBPatients.patientRegDate}}</td>
+                <td scope="col"><a href="{% url 'App:update' TBPatients.patientID  %}"><span class= "btn btn-success">Update</span></a></td>
+                <td scope="col"><a href="{% url 'App:dashboard-delete' TBPatients.patientID  %}"><span class= "btn btn-danger">Delete</span></a></td>
+
+                
+                {% comment %} <td >{{TBPatients.patientXrayImage}}</td> {% endcomment %}
+            </tr>
+         
+            {% endfor %}
+            </tbody>
+        
+
+
+        
+
+       
+    </table>
+     
+
+
+    </div>
+  </div>
+</section>
+

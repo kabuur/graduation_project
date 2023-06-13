@@ -9,14 +9,15 @@ from Accounts.models import  Hospital
 class Patient(models.Model):
     
     userName = models.ForeignKey(User, null = False, on_delete = models.CASCADE)
-    patientID = models.CharField(max_length=50,unique=True)
+    patientID = models.CharField(max_length=50)
     patientName = models.CharField(max_length=100)
     patientTell = models.CharField(max_length= 100)
     paientAge = models.IntegerField()
+    region = models.CharField(max_length=900)
     testType = models.CharField(max_length=100)
     patientGenter = models.CharField(max_length=100)
     patientAddress = models.CharField(max_length=100)
-    patientRegDate = models.DateTimeField(auto_now_add=False)
+    patientRegDate = models.DateTimeField(auto_now_add=True)
     isPridicted = models.BooleanField(default=False)
     patientXrayImage = models.ImageField(upload_to = 'xray')
     
@@ -27,10 +28,11 @@ class Patient(models.Model):
 class TuberculosisTests(models.Model):
     
     userName =  models.IntegerField()
-    patientID = models.CharField(max_length=50,unique=True)
+    patientID = models.CharField(max_length=50)
     patientName = models.CharField(max_length=100)
     patientTell = models.CharField(max_length= 100)
     paientAge = models.IntegerField()
+    region = models.CharField(max_length=900)
     pridected = models.CharField(max_length=100)
     patientGenter = models.CharField(max_length=100)
     patientAddress = models.CharField(max_length=100)
@@ -47,12 +49,12 @@ class TuberculosisTests(models.Model):
     
 
 class PneumoniaTests(models.Model):
-    
     userName =  models.IntegerField()
-    patientID = models.CharField(max_length=50,unique=True)
+    patientID = models.CharField(max_length=50)
     patientName = models.CharField(max_length=100)
     patientTell = models.CharField(max_length= 100)
     paientAge = models.IntegerField()
+    region = models.CharField(max_length=900)
     pridected = models.CharField(max_length=100)
     patientGenter = models.CharField(max_length=100)
     patientAddress = models.CharField(max_length=100)

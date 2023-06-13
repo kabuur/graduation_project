@@ -7,6 +7,7 @@
 # def Home(Request):
 #     return render(Request ,'App/index.html')
 
+from pyexpat.errors import messages
 import warnings
 from PIL import Image, ImageEnhance
 warnings.filterwarnings('ignore')
@@ -20,7 +21,7 @@ import keras.utils as image
 
 
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.template import loader
 # from .models import members
 from django.core.files.storage import FileSystemStorage
@@ -28,6 +29,31 @@ from django.conf import settings
 from .models import  Patient,TuberculosisTests,PneumoniaTests
 from django.contrib.auth.models import User
 from datetime import datetime
+import os
+
+
+
+
+
+
+
+def all(Request):
+    all = Patient.objects.all().values()
+    
+    TB = 'TUBERCULOSIS'
+    TB_region =TuberculosisTests.objects.raw( "SELECT ID ,COUNT(patientID)count, region  FROM App_TuberculosisTests WHERE pridected = %s GROUP BY region",[TB])
+  
+   
+    for TB_region in TB_region:
+        print(TB_region.region)
+        
+    context={
+        "TB_region":TB_region,
+        "all":all
+    }
+    return render(Request,'App/all.html',context)
+
+
 
 
 
@@ -39,8 +65,10 @@ def TBPridicted():
     return TBPridicted
 
 
-def notPridicted():
-    notPridicted =  Patient.objects.filter(isPridicted = False).values
+def notPridicted(Request):
+    username = Request.user.username
+    user = User.objects.get(username = username)
+    notPridicted =  Patient.objects.filter(isPridicted = False,userName = user.id).values
     
     return notPridicted
 
@@ -63,7 +91,7 @@ def  Home(Request):
                  person = "ma ahan mid jiro shiqsigaan"
                  context= {
                      "person": person,
-                     "notPridicted": notPridicted()
+                     "notPridicted": notPridicted(Request)
                  }
                  return render(Request,"App/index.html",context)
             imag = './media/'+pat[0]['patientXrayImage']
@@ -98,10 +126,12 @@ def  Home(Request):
                     output = "Result is Normal"
                     print("Result is Normal")
                     id =   pat[0]['patientID']
-                    TB =  TuberculosisTests.objects.filter(patientID = id).values()
+                    if ( TuberculosisTests.objects.filter(patientID = id , userName =  pat[0]['userName_id']).values()):
+                        print("patient exist")
+        
                  
-                    length = len(TB)
-                    if (length != 1):
+                    
+                    else:
                         TB = TuberculosisTests(
                                 userName =  pat[0]['userName_id'] ,
                                 patientID = pat[0]['patientID'] ,
@@ -121,16 +151,17 @@ def  Home(Request):
                     print("Affected By Tubarculosis")
                     
                     id =   pat[0]['patientID']
-                    TB =  TuberculosisTests.objects.filter(patientID = id).values()
-                 
-                    length = len(TB)
-                    if (length != 1):
+                    if ( TuberculosisTests.objects.filter(patientID = id , userName =  pat[0]['userName_id']).values()):
+                        print("patient exist")
+        
+                    else:
                         TB = TuberculosisTests(
                                 userName =  pat[0]['userName_id'] ,
                                 patientID = pat[0]['patientID'] ,
                                 patientName = pat[0]['patientName'] ,
                                 patientTell =pat[0]['patientTell'] ,
                                 paientAge = pat[0]['paientAge'] ,
+                                region = pat[0]['region'],
                                 pridected = 'TUBERCULOSIS' ,
                                 patientGenter = pat[0]['patientGenter'] ,
                                 patientAddress = pat[0]['patientAddress'] ,
@@ -144,10 +175,35 @@ def  Home(Request):
                     output = "Result is Normal"
                     print("Result is Normal")
                     id =   pat[0]['patientID']
-                    pn =  PneumoniaTests.objects.filter(patientID = id).values()
+                    if ( PneumoniaTests.objects.filter(patientID = id , userName =  pat[0]['userName_id']).values()):
+                        print("patient exist")
                  
-                    length = len(pn)
-                    if (length != 1):
+                  
+                    else:
+                        PN = PneumoniaTests(
+                                    userName =  pat[0]['userName_id'] ,
+                                    patientID = pat[0]['patientID'] ,
+                                    patientName = pat[0]['patientName'] ,
+                                    patientTell =pat[0]['patientTell'] ,
+                                    region = pat[0]['region'],
+                                    paientAge = pat[0]['paientAge'] ,
+                                    pridected = 'Normal' ,
+                                    patientGenter = pat[0]['patientGenter'] ,
+                                    patientAddress = pat[0]['patientAddress'] ,
+                                    patientRegDate = pat[0]['patientRegDate'] ,
+                                    patientXrayImage = 'TB/Tuberculosis/'+pat[0]['patientXrayImage'] 
+                            )
+                        PN.save()
+                    
+                else:
+                    output = "Affected By PNEUMONIA"
+                    print("Affected By PNEUMONIA")
+                    id =   pat[0]['patientID']
+                    if ( PneumoniaTests.objects.filter(patientID = id , userName =  pat[0]['userName_id']).values()):
+                        print("patient exist")
+                 
+                    
+                    else :
                             PN = PneumoniaTests(
                                     userName =  pat[0]['userName_id'] ,
                                     patientID = pat[0]['patientID'] ,
@@ -155,28 +211,6 @@ def  Home(Request):
                                     patientTell =pat[0]['patientTell'] ,
                                     paientAge = pat[0]['paientAge'] ,
                                     pridected = 'PNEUMONIA' ,
-                                    patientGenter = pat[0]['patientGenter'] ,
-                                    patientAddress = pat[0]['patientAddress'] ,
-                                    patientRegDate = pat[0]['patientRegDate'] ,
-                                    patientXrayImage = 'TB/Tuberculosis/'+pat[0]['patientXrayImage'] 
-                            )
-                            PN.save()
-                    
-                else:
-                    output = "Affected By PNEUMONIA"
-                    print("Affected By PNEUMONIA")
-                    id =   pat[0]['patientID']
-                    pn =  PneumoniaTests.objects.filter(patientID = id).values()
-                 
-                    length = len(pn)
-                    if (length != 1):
-                            PN = PneumoniaTests(
-                                    userName =  pat[0]['userName_id'] ,
-                                    patientID = pat[0]['patientID'] ,
-                                    patientName = pat[0]['patientName'] ,
-                                    patientTell =pat[0]['patientTell'] ,
-                                    paientAge = pat[0]['paientAge'] ,
-                                    pridected = 'Normal' ,
                                     patientGenter = pat[0]['patientGenter'] ,
                                     patientAddress = pat[0]['patientAddress'] ,
                                     patientRegDate = pat[0]['patientRegDate'] ,
@@ -204,55 +238,130 @@ def  Home(Request):
       
         context = {
           
-            "notPridicted": notPridicted()
+            "notPridicted": notPridicted(Request)
         }
      
         return render(Request,"App/index.html",context)
 
-
+#patient Regestration
 def X_Rey(Request):
+    username = Request.user.username
     if Request.method == 'POST':
-        name = Request.POST.get('name')
-        id = Request.POST.get('id')
-        tell = Request.POST.get('tell')
-        age = Request.POST.get('age')
-        gender = Request.POST.get('gender')
-        address = Request.POST.get('address')
-        test = Request.POST.get('type')
-        xrayImage = Request.FILES['xrayImage']
-      
-        username = Request.user.username
-       
-        print(username)
         
-   
+        if (Patient.objects.filter(userName = User.objects.get(username = username) ,patientID = Request.POST.get('id'))):
+            found = "this ID " +Request.POST.get('id')+ " is Already exist"
+            context = {"found":found}
+            return render(Request ,'App/patient.html',context)
+            
+        else:
+            
+            name = Request.POST.get('name')
+            id = Request.POST.get('id')
+            tell = Request.POST.get('tell')
+            age = Request.POST.get('age')
+            gender = Request.POST.get('gender')
+            address = Request.POST.get('address')
+            test = Request.POST.get('type')
+            Region = Request.POST.get('Region')
+            xrayImage = Request.FILES['xrayImage']
         
-        pat = Patient(
-                patientID = id,
-                patientName = name,
-                patientTell = tell,
-                paientAge = age,
-                testType = test,
-                patientGenter = gender,
-                patientAddress = address,
-                patientXrayImage = xrayImage,
-                userName = User.objects.get(username = username)
-        )
-        pat.save()
+            username = Request.user.username
         
-        
-        # img_file = Request.FILES['X_ray']
-        # fs = FileSystemStorage()
-        # filename = fs.save('./xray/'+img_file.name, img_file)
-        # print(filename)
+            print(username)
+            
+    
+            
+            pat = Patient(
+                    patientID = id,
+                    patientName = name,
+                    patientTell = tell,
+                    paientAge = age,
+                    testType = test,
+                    patientGenter = gender,
+                    patientAddress = address,
+                    region = Region,
+                    patientXrayImage = xrayImage,
+                    userName = User.objects.get(username = username)
+            )
+            pat.save()
     return render(Request ,'App/patient.html')
 
 
 
+def allPatients(Request):
+    
+    if Request.method == 'POST':
+        if Request.POST.get('allPatients') == "TB":
+            
+            username = Request.user.username
+            user = User.objects.get(username = username)
+            id =  user.id
+            TBPatients = TuberculosisTests.objects.filter(userName = id,  pridected = "TUBERCULOSIS").values()
+            context = {
+                "TBPatients": TBPatients,
+               
+            }
+            return context
+        elif Request.POST.get('allPatients') == "NORMAL":
+            
+            username = Request.user.username
+            user = User.objects.get(username = username)
+            id =  user.id
+            TBPatients = TuberculosisTests.objects.filter(userName = id,  pridected = "Normal").values()
+            PNPatients = PneumoniaTests.objects.filter(userName = id ,pridected = "Normal").values()
+            context = {
+                "TBPatients": TBPatients,
+                "PNPatients" : PNPatients
+               
+            }
+            return context
+        elif Request.POST.get('allPatients') == "PN":
+            
+            username = Request.user.username
+            user = User.objects.get(username = username)
+            id =  user.id
+            PNPatients = PneumoniaTests.objects.filter(userName = id ,pridected = "PNEUMONIA").values()
+            context = {
+                "PNPatients" : PNPatients
+               
+            }
+            return context
+        else:
+            username = Request.user.username
+            user = User.objects.get(username = username)
+            id =  user.id
+            TBPatients = TuberculosisTests.objects.filter(userName = id).values()
+            PNPatients = PneumoniaTests.objects.filter(userName = id).values()
+        
+
+
+            context = {
+                "TBPatients": TBPatients,
+                "PNPatients" : PNPatients
+            }
+            return context
+        
+           
+
+    else:
+        username = Request.user.username
+        user = User.objects.get(username = username)
+        id =  user.id
+        TBPatients = TuberculosisTests.objects.filter(userName = id).values()
+        PNPatients = PneumoniaTests.objects.filter(userName = id).values()
+        
+
+
+        context = {
+            "TBPatients": TBPatients,
+            "PNPatients" : PNPatients
+        }
+        return context
+
 
    
 def dashboard (Request):
-   
+    
     #TB chart
     TBresults = []
     countTBresults = []
@@ -283,29 +392,21 @@ def dashboard (Request):
     RegisterYear_monthCount = []
     countRegister = []  
     for results in Patient.objects.raw( "SELECT ID, userName_id ,COUNT(patientID)count,strftime('%Y-%m', patientRegDate) year_month FROM App_Patient GROUP BY year_month  "):
-        
-       
        
         if (results.userName_id == id):
             countRegister.append(results.count)
             RegisterYear_monthCount.append(results.year_month)
     
-    
-    
     countTB = len(TuberculosisTests.objects.filter(userName = id,pridected = 'TUBERCULOSIS').values())
     countNormalLtb = len(TuberculosisTests.objects.filter(userName = id,pridected = 'Normal').values())
     countPN = len(PneumoniaTests.objects.filter(userName = id,pridected = 'PNEUMONIA').values())
     countNormalPN = len(PneumoniaTests.objects.filter(userName = id,pridected = 'Normal').values())
-
-    
-    
-    
-    
-    
+    #TB regions
     
     
     context = {
         
+        "allPatients":allPatients(Request),
         
         "countTB": countTB,
         "countNormalLtb":countNormalLtb,
@@ -323,3 +424,134 @@ def dashboard (Request):
     }
     return render(Request, 'App/Dashboard.html',context)
 
+
+
+def updatePatients(Request,id):
+    username = Request.user.username
+    user = User.objects.get(username = username)
+    update = Patient.objects.get(patientID = id, userName = user.id) 
+    if Request.method == 'POST':
+        name = Request.POST.get('name')
+        id = Request.POST.get('id')
+        tell = Request.POST.get('tell')
+        age = Request.POST.get('age')
+        gender = Request.POST.get('gender')
+        address = Request.POST.get('address')
+        test = Request.POST.get('type')
+        Region = Request.POST.get('Region')
+       
+        username = Request.user.username
+        
+        
+        
+        if (len(Request.FILES) != 0):
+            if len(update.patientXrayImage)>0:
+                os.remove(update.patientXrayImage.path)
+            update.patientXrayImage = Request.FILES['xrayImage']
+    
+        update.patientID = id
+        update.patientName = name
+        update.patientTell = tell
+        update.paientAge = age
+        update.testType = test
+        update.patientGenter = gender
+        update.patientAddress = address
+        update.region = Region
+        update.isPridicted = False
+       
+        update.save()
+        
+        
+        if ("TB" in id):
+          TuberculosisTests.objects.get(patientID = id, userName = user.id).delete()
+         
+        if("PN" in id):
+             PneumoniaTests.objects.get(patientID = id, userName = user.id).delete()
+        return redirect('/')
+   
+
+    else:
+        context = {
+            "upadate":update
+        }
+        return render(Request,"App/updatePatients.html",context)
+    
+                                 
+
+def updatePatients2(Request, id):
+     
+     
+    username = Request.user.username
+    user = User.objects.get(username = username)
+    update = Patient.objects.get(patientID = id, userName = user.id) 
+    if Request.method == 'POST':
+        name = Request.POST.get('name')
+        id = Request.POST.get('id')
+        tell = Request.POST.get('tell')
+        age = Request.POST.get('age')
+        gender = Request.POST.get('gender')
+        address = Request.POST.get('address')
+        test = Request.POST.get('type')
+        Region = Request.POST.get('Region')
+       
+        username = Request.user.username
+        
+        
+        
+        if (len(Request.FILES) != 0):
+            if len(update.patientXrayImage)>0:
+                os.remove(update.patientXrayImage.path)
+            update.patientXrayImage = Request.FILES['xrayImage']
+    
+        update.patientID = id
+        update.patientName = name
+        update.patientTell = tell
+        update.paientAge = age
+        update.testType = test
+        update.patientGenter = gender
+        update.patientAddress = address
+        update.region = Region
+        update.isPridicted = False
+       
+        update.save()
+        
+        
+  
+        return redirect('/')
+   
+
+    else:
+        context = {
+            "upadate":update
+        }
+        return render(Request,"App/updatePatients.html",context)
+     
+     
+     
+
+
+
+
+def deletePatients(Request, id):
+        
+    username = Request.user.username
+    user = User.objects.get(username = username)
+    Patient.objects.get(patientID = id, userName = user.id).delete()
+
+    return redirect('/')
+
+
+
+def deletePatientsDahboard(Request, id):
+    username = Request.user.username
+    user = User.objects.get(username = username)
+    if ("TB" in id):
+          TuberculosisTests.objects.get(patientID = id, userName = user.id).delete()
+          Patient.objects.get(patientID = id, userName = user.id).delete()
+         
+    if("PN" in id):
+             PneumoniaTests.objects.get(patientID = id, userName = user.id).delete()
+             Patient.objects.get(patientID = id, userName = user.id).delete()
+ 
+
+    return redirect('/dashboard/')
