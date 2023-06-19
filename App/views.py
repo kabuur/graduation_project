@@ -66,9 +66,9 @@ def TBPridicted():
 
 
 def notPridicted(Request):
-    username = Request.user.username
-    user = User.objects.get(username = username)
-    notPridicted =  Patient.objects.filter(isPridicted = False,userName = user.id).values
+    # username = Request.user.username
+    # user = User.objects.get(username = username)
+    notPridicted =  Patient.objects.filter(isPridicted = False).values
     
     return notPridicted
 
@@ -554,4 +554,5 @@ def deletePatientsDahboard(Request, id):
              Patient.objects.get(patientID = id, userName = user.id).delete()
  
 
-    return redirect('/dashboard/')
+    return redirect('/dashboard/');
+

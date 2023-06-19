@@ -94,7 +94,7 @@
 
     <div class = 'row' >
 
-      <div class = 'col-lg-12'>
+      <div class = 'col-lg-8'>
 
         <div class = "card shadow mb-4">
 
@@ -113,7 +113,13 @@
         </div>
       </div>
 
+      <div class = 'col-lg-4'>
+        {% include './regions.html' %}
+      </div>
+
     </div>
+
+
   
     <div class = 'row'>
 
@@ -180,7 +186,7 @@
     data: {
       labels: [{% for Year_month in  RegisterYear_monthCount %}"{{Year_month}}",{% endfor %}],
       datasets: [{
-        label: "Earnings",
+        label: "REGESTRED",
         lineTension: 0.3,
         backgroundColor: "rgba(78, 115, 223, 0.05)",
         borderColor: "rgba(78, 115, 223, 1)",
