@@ -22,7 +22,7 @@ class Patient(models.Model):
     patientXrayImage = models.ImageField(upload_to = 'xray')
     
     def __str__(self):
-        return self.patientName
+        return self.patientID
 
 
 class TuberculosisTests(models.Model):

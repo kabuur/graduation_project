@@ -1,0 +1,67 @@
+{% extends 'accouts.html' %}
+{% load static %}
+
+{% block accounts %}
+    
+
+<section class="container">
+    
+    {% if hospitals %}
+
+    <div class = "col-md-6 mx-auto mt-5">
+        <form method="post" class="row g-3  p-3 shadow p-3 mb-5 bg-body rounded mx-auto ">
+            {% csrf_token %}
+            <div class ="row text-center text-primary "><h4 class="">Pateint information</h4></div>
+    
+            <div class="col-md-4">
+            <label for="pateintID" class="form-label">Pateint ID</label>
+            <input type="text" class="form-control" id="pateintID" name="pateintID">
+            </div>
+            
+    
+            <div class="col-md-3">
+                <label for="inputState" class="form-label">choose Hospital</label>
+                <select id="inputState" class="form-select" name="HOSPITAL">
+                <option selected>......</option>
+                {% for hospitals in hospitals %}
+                    <option value = "{{hospitals.HospitalName}}"> {{hospitals.HospitalName}}</option>
+                {% endfor %}
+                
+                </select>
+            </div>
+    
+    
+            <div class="col-md-6">
+            <label for="pateintTll" class="form-label">Pateint Tell</label>
+            <input type="tell" class="form-control" id="pateintTll" placeholder="+25261xxxxxxx" name="TELL">
+            </div>
+    
+    
+            <div class="col-12">
+            <button type="submit" class="btn col-6 btn-primary">Login</button>
+            </div>
+        </form>
+    </div>
+    
+    {% endif %}
+
+    
+
+    {% if patient %}
+
+        {% for patient in patient %}
+
+            <div class = "row">
+                <h1>
+                    {{patient.patientName}}
+                </h1>
+            </div>
+        
+        {% endfor %}
+        
+    {% endif %}
+        
+        
+
+</section>
+  {% endblock accounts %}

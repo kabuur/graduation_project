@@ -1,4 +1,5 @@
 {% extends 'accouts.html' %}
+{% load static %}
 {% block accounts %}
   {% comment %} <div class="main col-lg-5 mx-auto">
         <form action="" method="post">
@@ -47,6 +48,7 @@
 
 
      <section class="" >
+       
         <div class="container py-5 h-100" >
             <div class="row d-flex justify-content-center align-items-center h-100"  >
                 <div  class = "row"  style= "
@@ -62,15 +64,17 @@
                     <div class="col-lg-7 " style="background-color:white; " >
                         
                         <div class="card-body p-4 p-md-5">
-                            <h3 class="mb-4 pb-2 pb-md-0 mb-md-5 px-md-2">Registration Info</h3>
+                            
+                            <h3 class="mb-4 pb-2 pb-md-0 mb-md-5 px-md-2 text-center">Registration Info</h3>
+                            <div  id="dangerAlert" role="alert"></div>
       
                  
-                            <form action="" method="post" class="px-md-2 HospitalRegistration">
+                            <form action="" method="post" id="register" class="px-md-2 HospitalRegistration">
                                     {% csrf_token %}
                                 
                 
                                 <div class="form-outline mb-4">
-                                <input required  type="text" id="HospitalName" name='hospName' class="form-control" placeholder='Hospital Name'/>
+                                <input   type="text" id="HospitalName" name='hospName' class="form-control" placeholder='Hospital Name'/>
                                 </div>
 
                 
@@ -78,13 +82,13 @@
                                 <div class="col-md-6 mb-4">
                 
                                     <div class="form-outline datepicker">
-                                    <input required required type="text" class="form-control" name = "tell" placeholder = "Tell" id="tell" />
+                                    <input   type="text" class="form-control" name = "tell" placeholder = "Tell" id="tell" />
                                     
                                     </div>
                 
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <input required required type="email" class="form-control"placeholder = "Email"  name = "email" id="email" />
+                                    <input   type="email" class="form-control"placeholder = "Email"  name = "email" id="email" />
                                 
                 
                                 </div>
@@ -96,13 +100,13 @@
                                     <div class="col-md-6 mb-4">
                     
                                     <div class="form-outline datepicker">
-                                        <input required required type="text" class="form-control" name = "userName" placeholder = "User Name" id="userName" />
+                                        <input   type="text" class="form-control" name = "userName" placeholder = "User Name" id="userName" />
                                         
                                     </div>
                     
                                     </div>
                                     <div class="col-md-6 mb-4">
-                                    <input required required type="text" class="form-control"placeholder = "address"  name = "address" id="Address" />
+                                    <input   type="text" class="form-control"placeholder = "address"  name = "address" id="Address" />
                                     
                     
                                     </div>
@@ -114,23 +118,27 @@
                                     <div class="col-md-6 mb-4">
                     
                                     <div class="form-outline datepicker">
-                                        <input required required type="password" class="form-control" name = "password1" placeholder = "Password" id="password" />
-                                        <span style='color:red'>{{massage}}</span>
+                                        <input   type="password" onkeyup= "checkPasswordLength()" class="form-control" name = "password1" placeholder = "Password" id="password" />
+                                        <span id = "passwordHelper"></span>
                                     </div>
                     
                                     </div>
                                     <div class="col-md-6 mb-4">
-                                    <input required required type="password"  class="form-control"placeholder = "Confirm Password"  name = "password2" id="password2" />
-                                    <span style='color:red'>{{massage}}</span>
+                                    <input  type="password" onkeyup="checkconfirmPassword()"  class="form-control"placeholder = "Confirm Password"  name = "password2" id="password2" />
+                                    <span id="confirmpasswordHelper"></span>
                     
                                     </div>
                                 </div>
-                
+                                
+                                <div class="row text-center">
+                                    <span >Already a member.? <a href="/login"><strong>Log in</strong></a></span>
+                                </div>
                                 
                 
-                            
+                            <div class="row mt-4">
                 
-                                <button type="submit" class="btn btn-success btn-lg mb-1">Submit</button>
+                                <button type="submit" class=" mx-auto  col-lg-7 btn btn-success btn-lg mb-1">SignUp</button>
+                            </div>
                 
                             </form>
       
@@ -141,6 +149,8 @@
             </div>
           </div>
         </div>
+        
+       
       </section> 
 
 
@@ -149,3 +159,5 @@
 
 
       {% endblock accounts %}
+
+      

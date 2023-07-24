@@ -14,6 +14,12 @@
             <form action="" method="post" class = " p-1 shadow p-3 mb-5 bg-body rounded" enctype="multipart/form-data" >
                 {% csrf_token %}
                 <h3 class = 'text-secondary text-center'>Patient Update </h3>
+                {% if message %}
+                <div class="alert alert-danger" role="alert">
+                    {{message}}
+                  </div>
+                {% endif %}
+              
                 <hr>
                 <div class="row">
                     <div class="col-lg-12">

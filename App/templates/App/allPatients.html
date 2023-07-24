@@ -43,6 +43,7 @@
             <th scope="col">pridected</th>
             <th scope="col">Sex</th>
             <th scope="col">Address</th>
+            <th scope="col">Region</th>
             <th scope="col">RegDate</th>
             <th scope="col">Update</th>
             <th scope="col">Delete</th>
@@ -52,7 +53,7 @@
         
            
         
-            <tbody>
+            <tbody class="fs-9">
               {% for TBPatients in allPatients.TBPatients %}
             <tr>
             
@@ -64,6 +65,7 @@
                 <td >{{TBPatients.pridected}}</td>
                 <td >{{TBPatients.patientGenter}}</td>
                 <td >{{TBPatients.patientAddress}}</td>
+                <td >{{TBPatients.region}}</td>
                 <td >{{TBPatients.patientRegDate}}</td>
                 <td scope="col"><a href="{% url 'App:update' TBPatients.patientID  %}"><span class= "btn btn-success">Update</span></a></td>
                 <td scope="col"><a href="{% url 'App:dashboard-delete' TBPatients.patientID  %}"><span class= "btn btn-danger">Delete</span></a></td>
@@ -85,6 +87,7 @@
                 <td >{{TBPatients.pridected}}</td>
                 <td >{{TBPatients.patientGenter}}</td>
                 <td >{{TBPatients.patientAddress}}</td>
+                <td >{{TBPatients.region}}</td>
                 <td >{{TBPatients.patientRegDate}}</td>
                 <td scope="col"><a href="{% url 'App:update' TBPatients.patientID  %}"><span class= "btn btn-success">Update</span></a></td>
                 <td scope="col"><a href="{% url 'App:dashboard-delete' TBPatients.patientID  %}"><span class= "btn btn-danger">Delete</span></a></td>

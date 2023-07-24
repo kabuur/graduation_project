@@ -30,7 +30,7 @@ from .models import  Patient,TuberculosisTests,PneumoniaTests
 from django.contrib.auth.models import User
 from datetime import datetime
 import os
-
+from django.db.models import Count
 
 
 
@@ -66,9 +66,9 @@ def TBPridicted():
 
 
 def notPridicted(Request):
-    # username = Request.user.username
-    # user = User.objects.get(username = username)
-    notPridicted =  Patient.objects.filter(isPridicted = False).values
+    username = Request.user.username
+    user = User.objects.get(username = username)
+    notPridicted =  Patient.objects.filter(isPridicted = False,userName=user).values()
     
     return notPridicted
 
@@ -78,6 +78,7 @@ def  Home(Request):
     global pat 
     id = ''
     global imag
+    global imagPath
     
     if(Request.method == "POST"):
       
@@ -94,7 +95,8 @@ def  Home(Request):
                      "notPridicted": notPridicted(Request)
                  }
                  return render(Request,"App/index.html",context)
-            imag = './media/'+pat[0]['patientXrayImage']
+            imag = '/media/'+pat[0]['patientXrayImage']
+            imagPath = './media/'+pat[0]['patientXrayImage']
             id = pat[0]['patientID']
         
         
@@ -102,7 +104,7 @@ def  Home(Request):
             isPridictedUpdate = Patient.objects.get(patientID=pat[0]['patientID'])
             isPridictedUpdate.isPridicted = True
             isPridictedUpdate.save()
-            path=imag
+            path=imagPath
             path=str(path)
             print(path)
             
@@ -139,6 +141,7 @@ def  Home(Request):
                                 patientTell =pat[0]['patientTell'] ,
                                 paientAge = pat[0]['paientAge'] ,
                                 pridected = 'Normal' ,
+                                region = pat[0]['region'],
                                 patientGenter = pat[0]['patientGenter'] ,
                                 patientAddress = pat[0]['patientAddress'] ,
                                 patientRegDate = pat[0]['patientRegDate'] ,
@@ -211,6 +214,7 @@ def  Home(Request):
                                     patientTell =pat[0]['patientTell'] ,
                                     paientAge = pat[0]['paientAge'] ,
                                     pridected = 'PNEUMONIA' ,
+                                    region = pat[0]['region'],
                                     patientGenter = pat[0]['patientGenter'] ,
                                     patientAddress = pat[0]['patientAddress'] ,
                                     patientRegDate = pat[0]['patientRegDate'] ,
@@ -362,68 +366,107 @@ def allPatients(Request):
    
 def dashboard (Request):
     
-    #TB chart
-    TBresults = []
-    countTBresults = []
-    username = Request.user.username
-    user = User.objects.get(username = username)
-    id =  user.id
-    for resalts in TuberculosisTests.objects.raw( "SELECT ID,  COUNT(patientID)count ,pridected,userName FROM App_TuberculosisTests  GROUP BY pridected"):
-        
-        if(resalts.userName == id):
-            
-            TBresults.append(resalts.pridected)
-            countTBresults.append(resalts.count)
-    #PN chart
-    PNresults = []
-    countPNresults = []
-    username = Request.user.username
-    user = User.objects.get(username = username)
+  
    
-    for resalts in PneumoniaTests.objects.raw( "SELECT ID,  COUNT(patientID)count ,pridected,userName FROM App_PneumoniaTests  GROUP BY pridected"):
+    
+    if (Request.user.username):
+    #TB chart
+        TBresults = []
+        countTBresults = []
+        username = Request.user.username
+        user = User.objects.get(username = username)
+        id =  user.id
+        for resalts in TuberculosisTests.objects.raw( "SELECT ID,  COUNT(patientID)count ,pridected,userName FROM App_TuberculosisTests  GROUP BY pridected"):
+            
+            if(resalts.userName == id):
+                
+                TBresults.append(resalts.pridected)
+                countTBresults.append(resalts.count)
+        #PN chart
+        PNresults = []
+        countPNresults = []
+        username = Request.user.username
+        user = User.objects.get(username = username)
+    
+        for resalts in PneumoniaTests.objects.raw( "SELECT ID,  COUNT(patientID)count ,pridected,userName FROM App_PneumoniaTests  GROUP BY pridected"):
+            
+            if(resalts.userName == id):
+            
+                PNresults.append(resalts.pridected)
+                countPNresults.append(resalts.count)
         
-        if(resalts.userName == id):
-          
-            PNresults.append(resalts.pridected)
-            countPNresults.append(resalts.count)
-    
-    
-    #Main chart
-    RegisterYear_monthCount = []
-    countRegister = []  
-    for results in Patient.objects.raw( "SELECT ID, userName_id ,COUNT(patientID)count,strftime('%Y-%m', patientRegDate) year_month FROM App_Patient GROUP BY year_month  "):
+        
+        #Main chart
+        RegisterYear_monthCount = []
+        countRegister = []  
+        for results in Patient.objects.raw( "SELECT ID, userName_id ,COUNT(patientID)count,strftime('%Y-%m', patientRegDate) year_month FROM App_Patient GROUP BY year_month  "):
+        
+            if (results.userName_id == id):
+                countRegister.append(results.count)
+                RegisterYear_monthCount.append(results.year_month)
+        
+        countTB = len(TuberculosisTests.objects.filter(userName = id,pridected = 'TUBERCULOSIS').values())
+        countNormalLtb = len(TuberculosisTests.objects.filter(userName = id,pridected = 'Normal').values())
+        countPN = len(PneumoniaTests.objects.filter(userName = id,pridected = 'PNEUMONIA').values())
+        countNormalPN = len(PneumoniaTests.objects.filter(userName = id,pridected = 'Normal').values())
+        #TB regions
+        
+        
+        
+        # Region
+        queryset = (TuberculosisTests.objects
+            .values(
+            'region',
+            )
+            .filter(
+            userName=id,
+            )
+            .annotate(
+            total=Count('region'),
+            )
+            )
        
-        if (results.userName_id == id):
-            countRegister.append(results.count)
-            RegisterYear_monthCount.append(results.year_month)
-    
-    countTB = len(TuberculosisTests.objects.filter(userName = id,pridected = 'TUBERCULOSIS').values())
-    countNormalLtb = len(TuberculosisTests.objects.filter(userName = id,pridected = 'Normal').values())
-    countPN = len(PneumoniaTests.objects.filter(userName = id,pridected = 'PNEUMONIA').values())
-    countNormalPN = len(PneumoniaTests.objects.filter(userName = id,pridected = 'Normal').values())
-    #TB regions
-    
-    
-    context = {
-        
-        "allPatients":allPatients(Request),
-        
-        "countTB": countTB,
-        "countNormalLtb":countNormalLtb,
-        "countNormalPN":countNormalPN,
-        "countPN": countPN,
-        
-        
-        'PNresults':PNresults,
-        'countPNresults':countPNresults,
-        'TBresults':TBresults,
-        
-        'countTBresults':countTBresults,
-        'RegisterYear_monthCount':RegisterYear_monthCount,
-        'countRegister':countRegister
-    }
-    return render(Request, 'App/Dashboard.html',context)
+        gobolo = {}
 
+        for region in queryset:
+          
+           gobolo.update({region['region']:region['total']})
+        
+        
+        
+                   
+
+        print(gobolo)
+        
+     
+      
+        
+        
+        context = {
+            
+            "allPatients":allPatients(Request),
+            
+            "countTB": countTB,
+            "countNormalLtb":countNormalLtb,
+            "countNormalPN":countNormalPN,
+            "countPN": countPN,
+            
+            
+            'PNresults':PNresults,
+            'countPNresults':countPNresults,
+            'TBresults':TBresults,
+            
+            'countTBresults':countTBresults,
+            'RegisterYear_monthCount':RegisterYear_monthCount,
+            'countRegister':countRegister,
+            
+            "gobolo": gobolo,
+            "queryset": queryset,
+      
+        }
+        return render(Request, 'App/Dashboard.html',context)
+    else:
+         return render(Request, 'App/Dashboard.html')
 
 
 def updatePatients(Request,id):
@@ -431,15 +474,26 @@ def updatePatients(Request,id):
     user = User.objects.get(username = username)
     update = Patient.objects.get(patientID = id, userName = user.id) 
     if Request.method == 'POST':
+        
+            
         name = Request.POST.get('name')
-        id = Request.POST.get('id')
+        updateID = Request.POST.get('id')
+        
+        if (Patient.objects.filter(patientID = updateID, userName = user.id,isPridicted= False)):
+            message = "this" + updateID +" id already exist "
+            context = {
+            "message":message,
+            "upadate":update
+            }
+            return render(Request,"App/updatePatients.html",context)
+
         tell = Request.POST.get('tell')
         age = Request.POST.get('age')
         gender = Request.POST.get('gender')
         address = Request.POST.get('address')
         test = Request.POST.get('type')
         Region = Request.POST.get('Region')
-       
+    
         username = Request.user.username
         
         
@@ -449,7 +503,7 @@ def updatePatients(Request,id):
                 os.remove(update.patientXrayImage.path)
             update.patientXrayImage = Request.FILES['xrayImage']
     
-        update.patientID = id
+        update.patientID = updateID
         update.patientName = name
         update.patientTell = tell
         update.paientAge = age
@@ -458,15 +512,15 @@ def updatePatients(Request,id):
         update.patientAddress = address
         update.region = Region
         update.isPridicted = False
-       
+    
         update.save()
         
         
         if ("TB" in id):
-          TuberculosisTests.objects.get(patientID = id, userName = user.id).delete()
-         
+            TuberculosisTests.objects.get(patientID = id, userName = user.id).delete()
+        
         if("PN" in id):
-             PneumoniaTests.objects.get(patientID = id, userName = user.id).delete()
+            PneumoniaTests.objects.get(patientID = id, userName = user.id).delete()
         return redirect('/')
    
 
@@ -475,8 +529,7 @@ def updatePatients(Request,id):
             "upadate":update
         }
         return render(Request,"App/updatePatients.html",context)
-    
-                                 
+                                   
 
 def updatePatients2(Request, id):
      
@@ -517,7 +570,7 @@ def updatePatients2(Request, id):
         
         
   
-        return redirect('/')
+        return redirect('/predict')
    
 
     else:
@@ -525,11 +578,6 @@ def updatePatients2(Request, id):
             "upadate":update
         }
         return render(Request,"App/updatePatients.html",context)
-     
-     
-     
-
-
 
 
 def deletePatients(Request, id):
@@ -538,7 +586,7 @@ def deletePatients(Request, id):
     user = User.objects.get(username = username)
     Patient.objects.get(patientID = id, userName = user.id).delete()
 
-    return redirect('/')
+    return redirect('/predict')
 
 
 
@@ -554,5 +602,5 @@ def deletePatientsDahboard(Request, id):
              Patient.objects.get(patientID = id, userName = user.id).delete()
  
 
-    return redirect('/dashboard/');
+    return redirect('/')
 

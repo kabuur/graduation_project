@@ -9,10 +9,10 @@ urlpatterns  = [
     path('update/<str:id>/', updatePatients2, name = "update2"),
     
     path('delete/<str:id>/', deletePatients, name = "delete"),
-    path('dashboard/<str:id>/delete/', deletePatientsDahboard, name = "dashboard-delete"),
+    path('deleteDahboard/<str:id>/', deletePatientsDahboard, name = "dashboard-delete"),
     
-    path('dashboard/', dashboard, name='X_Rey'),
+    path('', dashboard, name='X_Rey'),
     path('all/',all,name="all"),
-    path('', Home, name='home'),
+    path('predict/', Home, name='home'),
     
 ]+static(settings.MEDIA_URL, document_root= settings.MEDIA_ROOT)

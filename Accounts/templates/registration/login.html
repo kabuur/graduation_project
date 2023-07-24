@@ -17,14 +17,21 @@
     </ul>
 {% endif %}
 
-<div class = "container">
+<div class = "container ">
     <div class="row">
-        <div class = "col-lg-5 mx-auto">
-            <h3>Login</h3>
+        <div class = "col-md-4 mt-5 mx-auto  p-1 shadow p-3 mb-5 bg-body rounded">
+            <h3 class = " text-center text-success ">Login</h3>
+            <hr>
             <form method = 'post'>
                 {% csrf_token %}{{form|crispy}}
-                <button class = "btn btn-success">Lofin</button>
-                <a href='/Regestration'>Regestration</a>
+               
+                    <button class = " col-lg-12 btn btn-success">Login</button>
+                    <div class="row mt-5 mb-3 mx-auto text-center" >
+                        <span >Not a member.?
+                        <a  href='/Regestration'><strong>SignUp</strong></a>
+                    </span>
+                    </div>
+                
             </form>
         </div>
     </div>
