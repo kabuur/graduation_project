@@ -12,17 +12,11 @@ let register = document.querySelector('#register');
 let dangerAlert = document.querySelector('#dangerAlert');
 let passwordHelper = document.querySelector("#passwordHelper")
 let confirmpasswordHelper = document.querySelector("#confirmpasswordHelper")
+
 register.addEventListener('submit',(event)=>{
 
  
-    event.preventDefault();
-    checkemty(HospitalName);
-    checkemty(tell);
-    checkemty(email);
-    checkemty(password);
-    checkemty(password2);
-    checkemty(address);
-    checkemty(userName)
+
     
    if(checkemty(HospitalName) && checkemty(tell) && checkemty(email) && checkemty(password) && checkemty(password2) && checkemty(address) && checkemty(userName)){
       
@@ -38,6 +32,16 @@ register.addEventListener('submit',(event)=>{
            
             return
         }
+    else{
+        
+    checkemty(HospitalName);
+    checkemty(tell);
+    checkemty(email);
+    checkemty(password);
+    checkemty(password2);
+    checkemty(address);
+    checkemty(userName)
+    }
 
    }
 

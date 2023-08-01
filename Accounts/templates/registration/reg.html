@@ -6,7 +6,7 @@
             {% csrf_token %}
             <span>{{massage}}</span>
             <label for="hospital">Hospital Name</label>
-            <input type="text" name="hospName" id="hospital"><br>
+            <input  requiredtype="text" name="hospName" id="hospital"><br>
 
             <label for="tell">Tell</label>
             <input type="text" name="tell" id="tell"><br>
@@ -71,10 +71,12 @@
                  
                             <form action="" method="post" id="register" class="px-md-2 HospitalRegistration">
                                     {% csrf_token %}
-                                
+                                    <div class="alert text-danger" role="alert">
+                                       {{massage}}
+                                      </div>
                 
                                 <div class="form-outline mb-4">
-                                <input   type="text" id="HospitalName" name='hospName' class="form-control" placeholder='Hospital Name'/>
+                                <input  required  type="text" id="HospitalName" name='hospName' class="form-control" placeholder='Hospital Name'/>
                                 </div>
 
                 
@@ -82,13 +84,13 @@
                                 <div class="col-md-6 mb-4">
                 
                                     <div class="form-outline datepicker">
-                                    <input   type="text" class="form-control" name = "tell" placeholder = "Tell" id="tell" />
+                                    <input  required  type="text" class="form-control" name = "tell" placeholder = "Tell" id="tell" />
                                     
                                     </div>
                 
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <input   type="email" class="form-control"placeholder = "Email"  name = "email" id="email" />
+                                    <input  required  type="email" class="form-control"placeholder = "Email"  name = "email" id="email" />
                                 
                 
                                 </div>
@@ -100,13 +102,13 @@
                                     <div class="col-md-6 mb-4">
                     
                                     <div class="form-outline datepicker">
-                                        <input   type="text" class="form-control" name = "userName" placeholder = "User Name" id="userName" />
+                                        <input  required  type="text" class="form-control" name = "userName" placeholder = "User Name" id="userName" />
                                         
                                     </div>
                     
                                     </div>
                                     <div class="col-md-6 mb-4">
-                                    <input   type="text" class="form-control"placeholder = "address"  name = "address" id="Address" />
+                                    <input  required  type="text" class="form-control"placeholder = "address"  name = "address" id="Address" />
                                     
                     
                                     </div>
@@ -118,13 +120,13 @@
                                     <div class="col-md-6 mb-4">
                     
                                     <div class="form-outline datepicker">
-                                        <input   type="password" onkeyup= "checkPasswordLength()" class="form-control" name = "password1" placeholder = "Password" id="password" />
+                                        <input  required  type="password" onkeyup= "checkPasswordLength()" class="form-control" name = "password1" placeholder = "Password" id="password" />
                                         <span id = "passwordHelper"></span>
                                     </div>
                     
                                     </div>
                                     <div class="col-md-6 mb-4">
-                                    <input  type="password" onkeyup="checkconfirmPassword()"  class="form-control"placeholder = "Confirm Password"  name = "password2" id="password2" />
+                                    <input  required type="password" onkeyup="checkconfirmPassword()"  class="form-control"placeholder = "Confirm Password"  name = "password2" id="password2" />
                                     <span id="confirmpasswordHelper"></span>
                     
                                     </div>

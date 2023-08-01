@@ -17,17 +17,17 @@ class Patient(models.Model):
     testType = models.CharField(max_length=100)
     patientGenter = models.CharField(max_length=100)
     patientAddress = models.CharField(max_length=100)
-    patientRegDate = models.DateTimeField(auto_now_add=True)
+    patientRegDate = models.DateTimeField(auto_now_add= True)
     isPridicted = models.BooleanField(default=False)
     patientXrayImage = models.ImageField(upload_to = 'xray')
     
     def __str__(self):
-        return self.patientID
+        return self.patientName
 
 
 class TuberculosisTests(models.Model):
     
-    userName =  models.IntegerField()
+    userName =  models.CharField(max_length=50)
     patientID = models.CharField(max_length=50)
     patientName = models.CharField(max_length=100)
     patientTell = models.CharField(max_length= 100)
@@ -37,7 +37,7 @@ class TuberculosisTests(models.Model):
     patientGenter = models.CharField(max_length=100)
     patientAddress = models.CharField(max_length=100)
     patientRegDate = models.DateField(auto_now_add=True)
-    patientXrayImage = models.ImageField(upload_to = 'TB/Tuberculosis')
+    patientXrayImage = models.ImageField(upload_to = 'Tuberculosis')
     def __str__(self):
         return self.patientName
     
@@ -49,7 +49,7 @@ class TuberculosisTests(models.Model):
     
 
 class PneumoniaTests(models.Model):
-    userName =  models.IntegerField()
+    userName =  models.CharField(max_length=50)
     patientID = models.CharField(max_length=50)
     patientName = models.CharField(max_length=100)
     patientTell = models.CharField(max_length= 100)
@@ -59,7 +59,7 @@ class PneumoniaTests(models.Model):
     patientGenter = models.CharField(max_length=100)
     patientAddress = models.CharField(max_length=100)
     patientRegDate = models.DateTimeField(auto_now_add=True)
-    patientXrayImage = models.ImageField(upload_to = 'PN/Pneumonia')
+    patientXrayImage = models.ImageField(upload_to = 'Pneumonia')
     def __str__(self):
         return self.patientName   
     

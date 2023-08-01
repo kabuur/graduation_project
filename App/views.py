@@ -73,7 +73,9 @@ def notPridicted(Request):
     return notPridicted
 
 def  Home(Request):
-    
+    username = Request.user.username
+    user = User.objects.get(username = username)
+    userNameID =  user
     output = ''
     global pat 
     id = ''
@@ -128,14 +130,14 @@ def  Home(Request):
                     output = "Result is Normal"
                     print("Result is Normal")
                     id =   pat[0]['patientID']
-                    if ( TuberculosisTests.objects.filter(patientID = id , userName =  pat[0]['userName_id']).values()):
+                    if ( TuberculosisTests.objects.filter(patientID = id , userName =  userNameID).values()):
                         print("patient exist")
         
                  
                     
                     else:
                         TB = TuberculosisTests(
-                                userName =  pat[0]['userName_id'] ,
+                                userName = userNameID ,
                                 patientID = pat[0]['patientID'] ,
                                 patientName = pat[0]['patientName'] ,
                                 patientTell =pat[0]['patientTell'] ,
@@ -152,14 +154,16 @@ def  Home(Request):
                    
                     output = "Affected By Tubarculosis"
                     print("Affected By Tubarculosis")
-                    
+                    username = Request.user.username
+                    user = User.objects.get(username = username)
+                    userNameID =  user
                     id =   pat[0]['patientID']
-                    if ( TuberculosisTests.objects.filter(patientID = id , userName =  pat[0]['userName_id']).values()):
+                    if ( TuberculosisTests.objects.filter(patientID = id , userName= userNameID).values()):
                         print("patient exist")
         
                     else:
                         TB = TuberculosisTests(
-                                userName =  pat[0]['userName_id'] ,
+                                userName =  userNameID,
                                 patientID = pat[0]['patientID'] ,
                                 patientName = pat[0]['patientName'] ,
                                 patientTell =pat[0]['patientTell'] ,
@@ -178,13 +182,13 @@ def  Home(Request):
                     output = "Result is Normal"
                     print("Result is Normal")
                     id =   pat[0]['patientID']
-                    if ( PneumoniaTests.objects.filter(patientID = id , userName =  pat[0]['userName_id']).values()):
+                    if ( PneumoniaTests.objects.filter(patientID = id , userName =  userNameID).values()):
                         print("patient exist")
                  
                   
                     else:
                         PN = PneumoniaTests(
-                                    userName =  pat[0]['userName_id'] ,
+                                    userName =  userNameID ,
                                     patientID = pat[0]['patientID'] ,
                                     patientName = pat[0]['patientName'] ,
                                     patientTell =pat[0]['patientTell'] ,
@@ -202,13 +206,13 @@ def  Home(Request):
                     output = "Affected By PNEUMONIA"
                     print("Affected By PNEUMONIA")
                     id =   pat[0]['patientID']
-                    if ( PneumoniaTests.objects.filter(patientID = id , userName =  pat[0]['userName_id']).values()):
+                    if ( PneumoniaTests.objects.filter(patientID = id , userName =  userNameID).values()):
                         print("patient exist")
                  
                     
                     else :
                             PN = PneumoniaTests(
-                                    userName =  pat[0]['userName_id'] ,
+                                    userName =  userNameID ,
                                     patientID = pat[0]['patientID'] ,
                                     patientName = pat[0]['patientName'] ,
                                     patientTell =pat[0]['patientTell'] ,
@@ -299,7 +303,7 @@ def allPatients(Request):
             
             username = Request.user.username
             user = User.objects.get(username = username)
-            id =  user.id
+            id =  user
             TBPatients = TuberculosisTests.objects.filter(userName = id,  pridected = "TUBERCULOSIS").values()
             context = {
                 "TBPatients": TBPatients,
@@ -310,7 +314,7 @@ def allPatients(Request):
             
             username = Request.user.username
             user = User.objects.get(username = username)
-            id =  user.id
+            id =  user
             TBPatients = TuberculosisTests.objects.filter(userName = id,  pridected = "Normal").values()
             PNPatients = PneumoniaTests.objects.filter(userName = id ,pridected = "Normal").values()
             context = {
@@ -323,7 +327,7 @@ def allPatients(Request):
             
             username = Request.user.username
             user = User.objects.get(username = username)
-            id =  user.id
+            id =  user
             PNPatients = PneumoniaTests.objects.filter(userName = id ,pridected = "PNEUMONIA").values()
             context = {
                 "PNPatients" : PNPatients
@@ -333,9 +337,9 @@ def allPatients(Request):
         else:
             username = Request.user.username
             user = User.objects.get(username = username)
-            id =  user.id
-            TBPatients = TuberculosisTests.objects.filter(userName = id).values()
-            PNPatients = PneumoniaTests.objects.filter(userName = id).values()
+            usernameID =  user
+            TBPatients = TuberculosisTests.objects.filter(userName = usernameID).values()
+            PNPatients = PneumoniaTests.objects.filter(userName = usernameID).values()
         
 
 
@@ -350,7 +354,7 @@ def allPatients(Request):
     else:
         username = Request.user.username
         user = User.objects.get(username = username)
-        id =  user.id
+        id =  user
         TBPatients = TuberculosisTests.objects.filter(userName = id).values()
         PNPatients = PneumoniaTests.objects.filter(userName = id).values()
         
@@ -366,42 +370,47 @@ def allPatients(Request):
    
 def dashboard (Request):
     
-  
+    
+
    
     
     if (Request.user.username):
+       
     #TB chart
         TBresults = []
         countTBresults = []
         username = Request.user.username
         user = User.objects.get(username = username)
-        id =  user.id
-        for resalts in TuberculosisTests.objects.raw( "SELECT ID,  COUNT(patientID)count ,pridected,userName FROM App_TuberculosisTests  GROUP BY pridected"):
-            
-            if(resalts.userName == id):
-                
-                TBresults.append(resalts.pridected)
-                countTBresults.append(resalts.count)
-        #PN chart
+        id =  user
+       
+      
+        #TB_and_Normal_group_by 
+        TB_and_Normal_group_by = TuberculosisTests.objects.values('pridected', ).filter(userName=id).annotate(total=Count('patientID'),).order_by ('pridected') 
+        for TB_and_Normal_group_by in TB_and_Normal_group_by:
+           
+            TBresults.append(TB_and_Normal_group_by['pridected'])
+            countTBresults.append(TB_and_Normal_group_by['total'])
+        
+   
+   
+        #   PN_and_Normal_group_by 
         PNresults = []
         countPNresults = []
-        username = Request.user.username
-        user = User.objects.get(username = username)
-    
-        for resalts in PneumoniaTests.objects.raw( "SELECT ID,  COUNT(patientID)count ,pridected,userName FROM App_PneumoniaTests  GROUP BY pridected"):
-            
-            if(resalts.userName == id):
-            
-                PNresults.append(resalts.pridected)
-                countPNresults.append(resalts.count)
+        PN_and_Normal_group_by = PneumoniaTests.objects.values('pridected', ).filter(userName=id,).annotate(total=Count('patientID'),).order_by ('pridected') 
+        for PN_and_Normal_group_by in PN_and_Normal_group_by:
+           
+            PNresults.append(PN_and_Normal_group_by['pridected'])
+            countPNresults.append(PN_and_Normal_group_by['total'])
+     
+      
         
         
         #Main chart
         RegisterYear_monthCount = []
         countRegister = []  
-        for results in Patient.objects.raw( "SELECT ID, userName_id ,COUNT(patientID)count,strftime('%Y-%m', patientRegDate) year_month FROM App_Patient GROUP BY year_month  "):
+        for results in Patient.objects.raw( "SELECT ID ,COUNT(patientID)count,strftime('%Y-%m', patientRegDate) year_month FROM App_Patient GROUP BY year_month  "):
         
-            if (results.userName_id == id):
+            if (results.userName == id):
                 countRegister.append(results.count)
                 RegisterYear_monthCount.append(results.year_month)
         
@@ -436,7 +445,7 @@ def dashboard (Request):
         
                    
 
-        print(gobolo)
+        
         
      
       
@@ -472,14 +481,14 @@ def dashboard (Request):
 def updatePatients(Request,id):
     username = Request.user.username
     user = User.objects.get(username = username)
-    update = Patient.objects.get(patientID = id, userName = user.id) 
+    update = Patient.objects.get(patientID = id, userName = user) 
     if Request.method == 'POST':
         
             
         name = Request.POST.get('name')
         updateID = Request.POST.get('id')
         
-        if (Patient.objects.filter(patientID = updateID, userName = user.id,isPridicted= False)):
+        if (Patient.objects.filter(patientID = updateID, userName = user,isPridicted= False)):
             message = "this" + updateID +" id already exist "
             context = {
             "message":message,
@@ -517,10 +526,10 @@ def updatePatients(Request,id):
         
         
         if ("TB" in id):
-            TuberculosisTests.objects.get(patientID = id, userName = user.id).delete()
+            TuberculosisTests.objects.get(patientID = id, userName = user).delete()
         
         if("PN" in id):
-            PneumoniaTests.objects.get(patientID = id, userName = user.id).delete()
+            PneumoniaTests.objects.get(patientID = id, userName = user).delete()
         return redirect('/')
    
 
@@ -536,7 +545,7 @@ def updatePatients2(Request, id):
      
     username = Request.user.username
     user = User.objects.get(username = username)
-    update = Patient.objects.get(patientID = id, userName = user.id) 
+    update = Patient.objects.get(patientID = id, userName = user) 
     if Request.method == 'POST':
         name = Request.POST.get('name')
         id = Request.POST.get('id')
@@ -584,7 +593,7 @@ def deletePatients(Request, id):
         
     username = Request.user.username
     user = User.objects.get(username = username)
-    Patient.objects.get(patientID = id, userName = user.id).delete()
+    Patient.objects.get(patientID = id, userName = user).delete()
 
     return redirect('/predict')
 
@@ -594,12 +603,12 @@ def deletePatientsDahboard(Request, id):
     username = Request.user.username
     user = User.objects.get(username = username)
     if ("TB" in id):
-          TuberculosisTests.objects.get(patientID = id, userName = user.id).delete()
-          Patient.objects.get(patientID = id, userName = user.id).delete()
+          TuberculosisTests.objects.get(patientID = id, userName = user).delete()
+          Patient.objects.get(patientID = id, userName = user).delete()
          
     if("PN" in id):
-             PneumoniaTests.objects.get(patientID = id, userName = user.id).delete()
-             Patient.objects.get(patientID = id, userName = user.id).delete()
+             PneumoniaTests.objects.get(patientID = id, userName = user).delete()
+             Patient.objects.get(patientID = id, userName = user).delete()
  
 
     return redirect('/')

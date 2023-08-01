@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import render,redirect
 from Accounts .models import Hospital
-from App.models import Patient
+from App.models import Patient,TuberculosisTests,PneumoniaTests
 
 # Create your views here.
 # Create your views here.
@@ -20,6 +20,7 @@ from App.models import Patient
 
 
 def pateintUser(Requiest):
+    
     hospitals = Hospital.objects.all().values()
   
 
@@ -30,16 +31,47 @@ def pateintUser(Requiest):
         HOSPITAL = Requiest.POST.get("HOSPITAL")
         HospitaliID = Hospital.objects.get( HospitalName= HOSPITAL)
         id = HospitaliID.userName
-        if(Patient.objects.filter(userName = id,patientID= ID,isPridicted = True,patientTell = TELL).values()):
-            patient =  Patient.objects.filter(userName = id,patientID= ID,isPridicted = True,patientTell = TELL).values()
+        
+        
+        
+        if TuberculosisTests.objects.filter(userName = id,patientID= ID,patientTell = TELL).values():
+            patient =  TuberculosisTests.objects.filter(userName = id,patientID= ID,patientTell = TELL).values()
+            patientImage =   Patient.objects.filter(userName = id,patientID= ID,patientTell = TELL).values()
+            patientImage = "/media/"+patientImage[0]['patientXrayImage']
+            test_type = "TUBERCULOSIS"
+            
             context = {
-                'patient': patient
+                "test_type":test_type,
+                'patient': patient,
+                "patientImage":patientImage
             }
             return render(Requiest,'PersonalUser/pateintUser.html',context)
-            
         
-        # id = User.objects.get(username = )
-        # if(Patient.objects.filter(patientID = ID, patientTell = TELL,)):
+        
+        
+        elif PneumoniaTests.objects.filter(userName = id,patientID= ID,patientTell = TELL).values():
+            patient =  PneumoniaTests.objects.filter(userName = id,patientID= ID,patientTell = TELL).values()
+            patientImage =   Patient.objects.filter(userName = id,patientID= ID,patientTell = TELL).values()
+            patientImage = "/media/"+patientImage[0]['patientXrayImage']
+            test_type = "PNEUMONIA"
+            context = {
+                "test_type":test_type,
+                'patient': patient,
+                "patientImage":patientImage
+            }
+            return render(Requiest,'PersonalUser/pateintUser.html',context)
+        
+        
+        
+        
+        else:
+            context = {
+                "hospitals":hospitals,
+                'message': "Ma ahan mid jiro shaqsigaan sorry ......"
+            }
+            return render(Requiest,'PersonalUser/pateintUser.html',context)
+        
+        
     
     
     

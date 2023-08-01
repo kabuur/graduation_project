@@ -11,18 +11,25 @@
     <div class = "col-md-6 mx-auto mt-5">
         <form method="post" class="row g-3  p-3 shadow p-3 mb-5 bg-body rounded mx-auto ">
             {% csrf_token %}
+
+            {% if message %}
+            <div class="alert alert-danger" role="alert">
+                {{message}}
+            </div>
+            {% endif %}
+
             <div class ="row text-center text-primary "><h4 class="">Pateint information</h4></div>
     
             <div class="col-md-4">
             <label for="pateintID" class="form-label">Pateint ID</label>
-            <input type="text" class="form-control" id="pateintID" name="pateintID">
+            <input required type="text" class="form-control" id="pateintID" name="pateintID">
             </div>
             
     
             <div class="col-md-3">
-                <label for="inputState" class="form-label">choose Hospital</label>
-                <select id="inputState" class="form-select" name="HOSPITAL">
-                <option selected>......</option>
+                <label for="hospital" class="form-label">choose Hospital</label>
+                <select required id="hospital" class="form-select" name="HOSPITAL">
+                <option selected value="">......</option>
                 {% for hospitals in hospitals %}
                     <option value = "{{hospitals.HospitalName}}"> {{hospitals.HospitalName}}</option>
                 {% endfor %}
@@ -33,15 +40,18 @@
     
             <div class="col-md-6">
             <label for="pateintTll" class="form-label">Pateint Tell</label>
-            <input type="tell" class="form-control" id="pateintTll" placeholder="+25261xxxxxxx" name="TELL">
+            <input required type="tell" class="form-control" id="pateintTll" placeholder="+25261xxxxxxx" name="TELL">
             </div>
     
     
             <div class="col-12">
             <button type="submit" class="btn col-6 btn-primary">Login</button>
+            <a  href='/login'><strong>Login</strong></a>
             </div>
         </form>
     </div>
+
+  
     
     {% endif %}
 
@@ -49,17 +59,86 @@
 
     {% if patient %}
 
-        {% for patient in patient %}
+       
 
-            <div class = "row">
-                <h1>
-                    {{patient.patientName}}
-                </h1>
+        <div class = "row mt-5 p-2 shadow bg-body rounded" >
+
+            <div class ="col-lg-6  ">
+
+               <img class ="rounded" src="{{patientImage}}" width= '600'  height ="500"  name="image"  alt="">
+            </div>
+
+                <div class ="col-lg-6  p-3" style="font-size:18px; font-weight:bold;">
+                    <div class = "row">
+                        <h1 class="text-center"> {{test_type}} TESTING</h1>
+                    </div>
+                    {% for cat in patient%}
+                    
+                        <div class = 'row patientInfo ' >
+                            <div class = 'row'>
+                                <p class = 'col-lg-6'>Patient Name : </p>
+                                <p class = 'col-lg-6'>{{cat.patientName}}</p>
+                            </div>
+
+                            <div class = 'row' style = "margin-top:10px">
+                                <p class = 'col-lg-6'>Patient Tell : </p>
+                                <p class = 'col-lg-6'>{{cat.patientTell}}</p>
+                            </div>
+
+                            <div class = 'row' style = "margin-top:10px">
+                                <p class = 'col-lg-6'>Patient Age : </p>
+                                <p class = 'col-lg-6'>{{cat.paientAge}}</p>
+                            </div>
+
+                            <div class = 'row' style = "margin-top:10px">
+                                <p class = 'col-lg-6'>Patient Gender :</p>
+                                <p class = 'col-lg-6'> {{cat.patientGenter}}</p>
+                            </div>
+
+                            <div class = 'row' style = "margin-top:10px">
+                                <p class = 'col-lg-6'>Patient Address :</p>
+                                <p class = 'col-lg-6'> {{cat.patientAddress}}</p>
+                            </div>
+
+                            
+
+                            
+                            <div class = 'row ' style = "margin-top:10px;  ">
+                                <p class = 'col-lg-6'>Registration Date:</p>
+                                <p class = 'col-lg-6'>{{cat.patientRegDate}}</p>
+                            </div>
+
+                            <div class = 'row' style = "margin-top:10px">
+                                <p class = 'col-lg-6'>Result:</p>
+                                <p class = 'col-lg-6'>{{cat.pridected}}</p>
+                            </div>
+                            
+                        </div>
+                    {% endfor %}
+
+
+                </div>
+
+            <div class= "col-lg-6">
+                {% for patient in patient %}
+
+                <img src=" /media/+{{imag}}" width= 'auto'  height ="350px"  name="image"  alt="">
+                
+                {% endfor %}
+            </div>
+                
             </div>
         
-        {% endfor %}
+       
+
         
     {% endif %}
+
+    
+  
+        
+
+    
         
         
 
