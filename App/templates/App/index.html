@@ -94,6 +94,7 @@
                         </div>
                     {% endfor %}
                     <div class="alert" >
+                        {% comment %} person not found {% endcomment %}
                         {{person}}
                       </div>
                   
@@ -104,26 +105,142 @@
 
                
                 {% for cat in patient%}
-                <div class = "col-lg-5">
-                    <form action="" method="post" >{% csrf_token %}
-                        <div class = 'row'>
-                            <h3 > Test Type : {{cat.testType}}</h3>
-                        </div>     
-                        <div class = 'row' style="margin-top:40px; "> 
-                            <img src="{{imag}}" width= 'auto'  height ="350px"  name="image"  alt="">
-                           
-                            <input type="text" hidden value="lllllll" name="pridicts">
-                        </div>
-                        <div class = 'row' style="margin-top:10px;padding:0 10px">
-                            <input type="submit" value="Pridict" class=" btn btn-primary">
-                        </div>
-                        <h5>{{output}}</h5>    
-                    </form>  
+                    <div class = "col-lg-5">
+                        <form action="" method="post" >{% csrf_token %}
+                            <div class = '   d-flex justify-content-between'>
+                                <h3  class = ""  > Test Type : {{cat.testType}}</h3>
+                                {% if output %}<button onclick="window.print();" class = "  btn btn-primary">Print</button>{% endif %}
+                                
+                            </div> 
+                            <div class = 'row' style="margin-top:40px; "> 
+                                <img src="{{imag}}" width= 'auto'  height ="350px"  name="image"  alt="">
+                            
+                                <input type="text" hidden value="lllllll" name="pridicts">
+                            </div>
+                            <div class = 'row' style="margin-top:10px;padding:0 10px">
+                                <input type="submit" value="PREDICT" class=" btn btn-primary">
+                            </div>
+                            {% comment %} result  {% endcomment %}
+                            <h5>{{output}}</h5>    
+                        </form>  
 
-                </div>
+                    </div>
                 {% endfor %}
           
             </div>
+
+            <style>
+                #print-container{
+                    position:absolute;
+                    top:0px;
+                    visibility:hidden;
+                }
+                @media print{
+                    #print-container{
+                      position:absolute;
+                      top:0px;
+                      left:30px;
+                      background:white;
+                        
+                    }
+                    body * {
+                        visibility:hidden;
+                    }
+                    #print-container, #print-container *{
+                        
+                        visibility:visible;
+                       
+                    }
+                }
+            </style>
+
+            {% if output %}
+
+                <section id = "print-container" class = "print ">
+                    {% for HospitalInfo in HospitalInfo %}
+                        <div class = "row mt-5  text-center">
+                            <h1>{{HospitalInfo.HospitalName}}</h1>
+                        </div>
+
+                        <div class = "row mt-3 text-center">
+                            <h5>Mogadishu Somalia Tel: {{HospitalInfo.tell}}</h5>
+                        </div>
+
+                        <div class = "row  text-center">
+                            <h5>Email : {{HospitalInfo.email }}  /   Website: www.{{HospitalInfo.email}}</h5>
+                        </div>
+
+                    {% endfor %}
+
+
+                    <div class = "row mt-5">
+                        <hr>
+                        <div class ="col-lg-6 mx-auto">
+                            <table class="table">
+
+                            {% for patient in patient %}
+                                <tr class =""> 
+                                    <td class ="" style="background:#959596"><h4>Patient No:</h4></td> 
+                                    <td><h5> {{patient.patientID}} </h5></td>
+                                </tr>
+
+                                <tr class =""> 
+                                    <td class ="" style="background:#959596"><h4>Patient Name:</h4></td> 
+                                    <td><h5> {{patient.patientName}} </h5> </td>
+                                </tr>
+
+                                <tr class =""> 
+                                    <td class ="" style="background:#959596"><h4>Sex:</h4></td> 
+                                    <td><h5>  {{patient.patientGenter}}  </h5></td>
+                                </tr>
+
+                                <tr class =""> 
+                                    <td class ="" style="background:#959596"><h4>Age:</h4></td> 
+                                    <td><h5> {{patient.paientAge}} Yr(s)<h5>  </td>
+                                </tr>
+
+                            {% endfor %}
+
+                            <table>
+                        </div>
+                        
+                    </div>
+
+
+
+                    <div class = "row mt-5 text-center">
+                        <h3 class = " col-lg-8">CHEST XRAY REPORT</h3>
+                        {% for patient in patient %}
+
+                        <h5 class = "col-lg-4">Date: {{date}}</h5>
+                        
+                        {% endfor %}
+                    </div>
+
+
+                    <div class ="row mt-5">
+                        <table class="table">
+                            <thead style="background:#959596">
+                                <tr>
+                                  <th scope="col">Test Name</th>
+                                  <th scope="col">Test Result</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr>
+                                    {% for patient in  patient %}
+                                        <td><h5>{{patient.testType}}</h5></td>
+                                    {% endfor %}
+                                    <td><h5>{{output}}</h5></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                
+                </section>
+            
+            {% endif %}
     
 
 
@@ -131,58 +248,60 @@
         
             {% if patient   %}
 
-            {% else %}
-                <div class = 'row '>
-                    <table class="table col-lg-12 table-bordered border-dark">
-                        <thead class = "table-dark">
-                            <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">ID</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Tell</th>
-                            <th scope="col">Age</th>
-                            <th scope="col">Test Type</th>
-                            <th scope="col">Sex</th>
-                            <th scope="col">Address</th>
-                            <th scope="col">RegDate</th>
-                            <th scope="col">Update</th>
-                            <th scope="col">Delete</th>
-                          
-                            </tr>
-                        </thead>
-                        
-                        {% for notPridicted in notPridicted %}
-                           
-                        
-                            <tbody>
-                            <tr>
-                            
-                                <td >{{forloop.counter}}</td>
-                                <td >{{notPridicted.patientID}}</td>
-                                <td >{{notPridicted.patientName}}</td>
-                                <td >{{notPridicted.patientTell}}</td>
-                                <td >{{notPridicted.paientAge}}</td>
-                                <td >{{notPridicted.testType}}</td>
-                                <td >{{notPridicted.patientGenter}}</td>
-                                <td >{{notPridicted.patientAddress}}</td>
-                                <td >{{notPridicted.patientRegDate}}</td>
-                                <td scope="col"><a href="{% url 'App:update2' notPridicted.patientID  %}"><span class= "btn btn-success">Update</span></a></td>
-                                <td scope="col"><a href="{% url 'App:delete' notPridicted.patientID  %}"><span class= "btn btn-danger">Delete</span></a></td>
-                
+                {% else %}
+                    {% if notPridicted %}
+                        <div class = 'row '>
+                            <table class="table col-lg-12 table-bordered border-dark">
+                                <thead class = "table-dark">
+                                    <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Tell</th>
+                                    <th scope="col">Age</th>
+                                    <th scope="col">Test Type</th>
+                                    <th scope="col">Sex</th>
+                                    <th scope="col">Address</th>
+                                    <th scope="col">RegDate</th>
+                                    <th scope="col">Update</th>
+                                    <th scope="col">Delete</th>
                                 
-                               
-                            </tr>
-                            </tr>
-                            </tbody>
+                                    </tr>
+                                </thead>
+                                
+                                {% for notPridicted in notPridicted %}
+                                
+                                
+                                    <tbody>
+                                    <tr>
+                                    
+                                        <td >{{forloop.counter}}</td>
+                                        <td >{{notPridicted.patientID}}</td>
+                                        <td >{{notPridicted.patientName}}</td>
+                                        <td >{{notPridicted.patientTell}}</td>
+                                        <td >{{notPridicted.paientAge}}</td>
+                                        <td >{{notPridicted.testType}}</td>
+                                        <td >{{notPridicted.patientGenter}}</td>
+                                        <td >{{notPridicted.patientAddress}}</td>
+                                        <td >{{notPridicted.patientRegDate}}</td>
+                                        <td scope="col"><a href="{% url 'App:update2' notPridicted.patientID  %}"><span class= "btn btn-success">Update</span></a></td>
+                                        <td scope="col"><a href="{% url 'App:delete' notPridicted.patientID  %}"><span class= "btn btn-danger">Delete</span></a></td>
                         
-                
-                
+                                        
+                                    
+                                    </tr>
+                                    </tr>
+                                    </tbody>
+                                
                         
-                
-                        {% endfor %}
-                    </table>
-                </div>
-                
+                        
+                                
+                        
+                                {% endfor %}
+                            </table>
+                        </div>
+                    {% endif %}
+                    
             {% endif %}
         </div>
     

@@ -19,7 +19,7 @@ import numpy as np
 import keras.utils as image
 
 
-
+from datetime import datetime
 from django.http import HttpResponse
 from django.shortcuts import render,redirect
 from django.template import loader
@@ -32,6 +32,7 @@ from datetime import datetime
 import os
 from django.db.models import Count
 
+from Accounts.models import Hospital
 
 
 
@@ -227,14 +228,21 @@ def  Home(Request):
                             PN.save()
         else:
              return render(Request,"App/index.html")
-            
-
+        username = Request.user.username
+        user = User.objects.get(username = username)
+        userNameID =  user
+        HospitalInfo = Hospital.objects.filter(userName = userNameID ).values()
+        date = datetime.today().strftime('%Y-%m-%d')
+       
+        
         
         context = {
+            "date":date,
             "patient" : pat,
             "imag" : imag,
             "output": output,
-            "id": id
+            "id": id,
+            "HospitalInfo":HospitalInfo,
         
         }
         
