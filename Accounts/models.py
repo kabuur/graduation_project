@@ -11,3 +11,12 @@ class Hospital(models.Model):
 
     def __str__(self):
         return self.HospitalName
+    
+    
+class IndivitualUser(models.Model):
+    userName = models.CharField(max_length=200)
+    password = models.CharField(max_length=200)
+    active = models.BooleanField(default=False)
+    
+    def __str__(self) :
+        return self.userName

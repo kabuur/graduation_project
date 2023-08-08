@@ -1,0 +1,33 @@
+{% extends 'accouts.html' %}
+
+{% load static %}
+{% block accounts %}
+
+    
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 offset-md-3 mt-5">
+        
+        <form method="post" class ="col-lg-9 shadow bg-body rounded mx-auto p-4">
+            <div class =" mx-auto">
+                    <h2 class ="text-center text-success">Login As indivitual</h2>
+                    <hr>
+                <div class="mb-3 ">
+                    <label for="email" class="form-label">User Name</label>
+                    <input type="email" class="form-control" id="email" placeholder="Enter your user name">
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" placeholder="Enter your password">
+                </div>
+                <button type="submit" class="btn btn-success">Login</button>
+            </div>
+        </form>
+
+
+      </div>
+    </div>
+  </div>
+
+  {% endblock accounts %}

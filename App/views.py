@@ -31,7 +31,7 @@ from django.contrib.auth.models import User
 from datetime import datetime
 import os
 from django.db.models import Count
-
+from django.contrib.auth.decorators import login_required
 from Accounts.models import Hospital
 
 
@@ -260,6 +260,7 @@ def  Home(Request):
         return render(Request,"App/index.html",context)
 
 #patient Regestration
+
 def X_Rey(Request):
     username = Request.user.username
     if Request.method == 'POST':
@@ -378,13 +379,9 @@ def allPatients(Request):
    
 def dashboard (Request):
     
-    
-
-   
-    
     if (Request.user.username):
        
-    #TB chart
+        #TB chart
         TBresults = []
         countTBresults = []
         username = Request.user.username

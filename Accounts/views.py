@@ -45,3 +45,12 @@ def Regestration(Request):
   
     return render(Request, 'registration/reg.html',{"massage": massage},)
 
+
+
+
+def chooseAccount(Request):
+        return render(Request,"registration/Accounts.html")
+
+
+def loginIndivitual(Request):
+        return render(Request,"registration/loginIndivitual.html")

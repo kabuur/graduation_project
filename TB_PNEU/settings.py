@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'App',
     'Accounts',
     "PersonalUser",
+   
     "crispy_forms",
     "crispy_bootstrap5",
 ]
