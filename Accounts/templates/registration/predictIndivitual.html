@@ -1,0 +1,35 @@
+{% extends 'accouts.html' %}
+
+{% load static %}
+{% block accounts %}
+    <div class ="container mx-auto">
+        <div class ="col-lg-6 mx-auto">
+            <div class ="row">
+               
+                    <form method="post" enctype="multipart/form-data" class ="col-lg-8 mx-auto bg-info mt-5 p-4  shadow  mb-5 bg-body rounded">
+                        {% csrf_token %}
+                        <div class="row">
+                            <label class ="col-lg-5">Enter X-ray Image</label>
+                           
+                            <input class ="col-lg-7" required type="file"  class="form-control" name="xrayImage" id="p_xrayImage">
+                        </div>
+                        <div class="row mt-3">
+
+                            <label class ="col-lg-5">select Test Type</label>
+                            <select required name ="testType" class ="col-lg-4">
+                                <option value="">........</option>
+                                <option value="TUBERCULOSIS">TUBERCULOSIS</option>
+                                <option value="PNEUMONIA">PNEUMONIA</option>
+                            </select>
+                        </div>
+                        <button  type="submit" class ="btn btn-primary mt-3">predict</button>
+                        <h1>{{output}}</h1>
+                    </form>
+
+       
+                    
+            </div>
+        </div>
+    </div>
+
+{% endblock accounts %}

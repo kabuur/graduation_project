@@ -72,7 +72,7 @@ def notPridicted(Request):
     notPridicted =  Patient.objects.filter(isPridicted = False,userName=user).values()
     
     return notPridicted
-
+@login_required(login_url='/login')
 def  Home(Request):
     username = Request.user.username
     user = User.objects.get(username = username)
@@ -109,7 +109,7 @@ def  Home(Request):
             isPridictedUpdate.save()
             path=imagPath
             path=str(path)
-            print(path)
+            
             
             if pat[0]['testType'] == 'TUBERCULOSIS':
                 model=load_model('./TB.h5')
@@ -260,7 +260,7 @@ def  Home(Request):
         return render(Request,"App/index.html",context)
 
 #patient Regestration
-
+@login_required(login_url='/login')
 def X_Rey(Request):
     username = Request.user.username
     if Request.method == 'POST':
@@ -376,7 +376,7 @@ def allPatients(Request):
         return context
 
 
-   
+
 def dashboard (Request):
     
     if (Request.user.username):
@@ -445,15 +445,7 @@ def dashboard (Request):
         for region in queryset:
           
            gobolo.update({region['region']:region['total']})
-        
-        
-        
-                   
 
-        
-        
-     
-      
         
         
         context = {
@@ -482,7 +474,7 @@ def dashboard (Request):
     else:
          return render(Request, 'App/Dashboard.html')
 
-
+@login_required(login_url='/login')
 def updatePatients(Request,id):
     username = Request.user.username
     user = User.objects.get(username = username)
@@ -544,7 +536,7 @@ def updatePatients(Request,id):
         }
         return render(Request,"App/updatePatients.html",context)
                                    
-
+@login_required(login_url='/login')
 def updatePatients2(Request, id):
      
      
@@ -593,7 +585,7 @@ def updatePatients2(Request, id):
         }
         return render(Request,"App/updatePatients.html",context)
 
-
+@login_required(login_url='/login')
 def deletePatients(Request, id):
         
     username = Request.user.username
@@ -603,7 +595,7 @@ def deletePatients(Request, id):
     return redirect('/predict')
 
 
-
+@login_required(login_url='/login')
 def deletePatientsDahboard(Request, id):
     username = Request.user.username
     user = User.objects.get(username = username)

@@ -1,6 +1,6 @@
 
 from django.urls import path
-from .views import Regestration,chooseAccount,loginIndivitual
+from .views import Regestration,chooseAccount,loginIndivitual,predictIndivitual
 
 urlpatterns  = [
    
@@ -8,5 +8,6 @@ urlpatterns  = [
     
      path('loginIndivitual/', loginIndivitual, name='loginIndivitual'),
     path('chooseAccount/', chooseAccount, name='chooseAccount'),
+    path('predictIndivitual/', predictIndivitual, name='predictIndivitual'),
 
 ]

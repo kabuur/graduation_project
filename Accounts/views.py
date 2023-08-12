@@ -1,7 +1,22 @@
+from pyexpat.errors import messages
+import warnings
+from PIL import Image, ImageEnhance
+warnings.filterwarnings('ignore')
+import tensorflow as tf
+from keras.models import load_model
+from keras.applications.vgg16 import preprocess_input
+import numpy as np
+#from keras.preprocessing import image
+import keras.utils as image
+import os
+from django.core.files.storage import FileSystemStorage
+
+
 from django.shortcuts import redirect, render
 from django.contrib.auth.models import User
 from django.http import HttpResponse
-from .models import Hospital
+from django.contrib.auth.decorators import login_required
+from .models import Hospital,IndivitualUser
 # Create your views here.
 
 
@@ -53,4 +68,71 @@ def chooseAccount(Request):
 
 
 def loginIndivitual(Request):
+        
+        if Request.method == "POST":
+                userName = Request.POST.get("userName")
+                Password = Request.POST.get("Password")
+              
+                if IndivitualUser.objects.filter(userName = userName , password = Password):
+                        # return render (Request,"registration/predictIndivitual.html")
+                        return redirect('/predictIndivitual')
+                else:
+                        context= {
+                                "message":"Please enter a correct username and password. Note that both fields may be case-sensitive."
+                        }
+                        return render(Request,"registration/loginIndivitual.html",context) 
         return render(Request,"registration/loginIndivitual.html")
+
+
+# @login_required(login_url='/loginIndivitual')
+def predictIndivitual(Request):
+        if Request.method == "POST":
+                
+                output=""
+                img_file = Request.FILES['xrayImage']
+                testType = Request.POST.get('testType')
+               
+                fs = FileSystemStorage()
+                
+                filename = fs.save('./indivitual/'+img_file.name, img_file)
+                path = "./media/"+filename
+                
+               
+            
+              
+                
+                path=str(path)
+                print(path)
+                if testType == 'TUBERCULOSIS':
+                        model=load_model('./TB.h5')
+                else:
+                        model=load_model('./PN.h5')
+                
+                img_file=image.load_img(path,target_size=(224,224))
+                x=image.img_to_array(img_file)
+                x=np.expand_dims(x, axis=0)
+                img_data=preprocess_input(x)
+                classes=model.predict(img_data)
+                global result
+                result=classes
+                print(result[0][0])
+                if testType == 'TUBERCULOSIS':
+                        if result[0][0]>0.5:
+                                output = "Result is Normal"
+                                print("Result is Normal")
+                        else:                    
+                                output = "effected by Tuberclusis"
+                                print("effected by Tuberclusis")
+                else:
+                        if result[0][0]>0.5:
+                                output = "Result is Normal"
+                                print("Result is Normal")
+                        else:                    
+                                output = "effected by Pnemonia"
+                                print("effected by Pnemonia")
+                contex = {
+                        "output":output
+                }
+                return render (Request,"registration/predictIndivitual.html",contex)
+                
+        return render (Request,"registration/predictIndivitual.html")
