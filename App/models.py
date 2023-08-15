@@ -22,7 +22,7 @@ class Patient(models.Model):
     patientXrayImage = models.ImageField(upload_to = 'xray')
     
     def __str__(self):
-        return self.patientName
+        return self.patientID
 
 
 class TuberculosisTests(models.Model):
@@ -39,7 +39,7 @@ class TuberculosisTests(models.Model):
     patientRegDate = models.DateField(auto_now_add=True)
     patientXrayImage = models.ImageField(upload_to = 'Tuberculosis')
     def __str__(self):
-        return self.patientName
+        return self.patientID
     
 
 
@@ -61,5 +61,5 @@ class PneumoniaTests(models.Model):
     patientRegDate = models.DateTimeField(auto_now_add=True)
     patientXrayImage = models.ImageField(upload_to = 'Pneumonia')
     def __str__(self):
-        return self.patientName   
+        return self.patientID   
     

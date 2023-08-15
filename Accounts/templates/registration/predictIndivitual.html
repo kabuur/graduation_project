@@ -12,6 +12,16 @@
                             <label class ="col-lg-5">Enter X-ray Image</label>
                            
                             <input class ="col-lg-7" required type="file"  class="form-control" name="xrayImage" id="p_xrayImage">
+                            
+                            {% if img %}
+                                <img src="{{img}}" class="mt-3" id="displayImage"/>
+                                {% else %}
+                                    <img src="" class="mt-3" id="displayImage"/>
+                                    <span id ="imageChecker"></span>
+
+                            {% endif %}
+                                
+                           
                         </div>
                         <div class="row mt-3">
 
@@ -22,8 +32,8 @@
                                 <option value="PNEUMONIA">PNEUMONIA</option>
                             </select>
                         </div>
-                        <button  type="submit" class ="btn btn-primary mt-3">predict</button>
-                        <h1>{{output}}</h1>
+                        <button  type="submit" class ="btn btn-primary mt-3" id="btn">predict</button>
+                        <h1 id = "output">{{output}}</h1>
                     </form>
 
        

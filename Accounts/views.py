@@ -96,6 +96,7 @@ def predictIndivitual(Request):
                 
                 filename = fs.save('./indivitual/'+img_file.name, img_file)
                 path = "./media/"+filename
+                img = "/media/"+filename
                 
                
             
@@ -131,7 +132,8 @@ def predictIndivitual(Request):
                                 output = "effected by Pnemonia"
                                 print("effected by Pnemonia")
                 contex = {
-                        "output":output
+                        "output":output,
+                        "img":img
                 }
                 return render (Request,"registration/predictIndivitual.html",contex)
                 

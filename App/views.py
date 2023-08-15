@@ -262,7 +262,10 @@ def  Home(Request):
 #patient Regestration
 @login_required(login_url='/login')
 def X_Rey(Request):
+    
     username = Request.user.username
+  
+    
     if Request.method == 'POST':
         
         if (Patient.objects.filter(userName = User.objects.get(username = username) ,patientID = Request.POST.get('id'))):
@@ -273,7 +276,7 @@ def X_Rey(Request):
         else:
             
             name = Request.POST.get('name')
-            id = Request.POST.get('id')
+           
             tell = Request.POST.get('tell')
             age = Request.POST.get('age')
             gender = Request.POST.get('gender')
@@ -281,15 +284,40 @@ def X_Rey(Request):
             test = Request.POST.get('type')
             Region = Request.POST.get('Region')
             xrayImage = Request.FILES['xrayImage']
-        
             username = Request.user.username
+            
+          
+            userID = ''
+            if test == "PNEUMONIA": 
+            
+                if Patient.objects.values('patientID').filter(testType = "PNEUMONIA",userName = User.objects.get(username = username)).last():
+                    pa = Patient.objects.values('patientID').filter(testType = "PNEUMONIA" ,userName = User.objects.get(username = username)).last()
+                    t = pa['patientID']
+                    print(t)
+                    num = ''.join(filter(lambda x: x.isdigit(), t))
+                    number =  int(num)+1
+                    userID = "PN" +str(number)
+                    print(userID)
+                
+                else:
+                    userID= "PN2301"
+
+            else:
+                if Patient.objects.values('patientID').filter(testType = "TUBERCULOSIS",userName = User.objects.get(username = username)).last():
+                    pa = Patient.objects.values('patientID').filter(testType = "TUBERCULOSIS",userName= User.objects.get(username = username) ).last()
+                    t = pa['patientID']
+                    print(t)
+                    num = ''.join(filter(lambda x: x.isdigit(), t))
+                    number =  int(num)+1
+                    userID = "TB"+str(number)
+                    print(userID)
+                else :
+                    userID = "TB2301"
+                
         
-            print(username)
-            
-    
-            
+                
             pat = Patient(
-                    patientID = id,
+                    patientID = userID,
                     patientName = name,
                     patientTell = tell,
                     paientAge = age,
@@ -378,8 +406,13 @@ def allPatients(Request):
 
 
 def dashboard (Request):
+   
+
+
     
     if (Request.user.username):
+       
+
        
         #TB chart
         TBresults = []
@@ -387,8 +420,10 @@ def dashboard (Request):
         username = Request.user.username
         user = User.objects.get(username = username)
         id =  user
-       
+     
       
+          
+
         #TB_and_Normal_group_by 
         TB_and_Normal_group_by = TuberculosisTests.objects.values('pridected', ).filter(userName=id).annotate(total=Count('patientID'),).order_by ('pridected') 
         for TB_and_Normal_group_by in TB_and_Normal_group_by:
@@ -441,9 +476,7 @@ def dashboard (Request):
             )
        
         gobolo = {}
-
         for region in queryset:
-          
            gobolo.update({region['region']:region['total']})
 
         
@@ -509,7 +542,7 @@ def updatePatients(Request,id):
                 os.remove(update.patientXrayImage.path)
             update.patientXrayImage = Request.FILES['xrayImage']
     
-        update.patientID = updateID
+      
         update.patientName = name
         update.patientTell = tell
         update.paientAge = age
@@ -562,7 +595,7 @@ def updatePatients2(Request, id):
                 os.remove(update.patientXrayImage.path)
             update.patientXrayImage = Request.FILES['xrayImage']
     
-        update.patientID = id
+    
         update.patientName = name
         update.patientTell = tell
         update.paientAge = age
