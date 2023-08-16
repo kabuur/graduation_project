@@ -84,6 +84,41 @@ def loginIndivitual(Request):
         return render(Request,"registration/loginIndivitual.html")
 
 
+def registerIndivitual(Request):
+        if Request.method == "POST":
+                name = Request.POST.get("name")
+                tell  = Request.POST.get("tell")
+                userName = Request.POST.get("userName")
+                password1 = Request.POST.get("Password1")
+                password2 = Request.POST.get("Password2")
+                if IndivitualUser.objects.filter(userName =userName):
+                        context = {
+                                "message":"this user name "+ userName +" is already exist"
+                        }
+                        return render(Request,"registration/registerIndivitual.html",context)
+                else:
+                        
+                        if (password1 == password2):
+                                
+                                create = IndivitualUser.objects.create(
+                                userName = userName,
+                                password = password1,
+                                tell =tell,
+                                name = name,
+                                )
+                                create.save()
+                                return redirect("/loginIndivitual")
+                        else:
+                                context = {
+                                        "message":"Password Must be Same"
+                                }
+                                return render(Request,"registration/registerIndivitual.html",context)
+
+                        
+                
+        
+        return render(Request,"registration/registerIndivitual.html")
+
 # @login_required(login_url='/loginIndivitual')
 def predictIndivitual(Request):
         if Request.method == "POST":

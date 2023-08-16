@@ -1,23 +1,18 @@
 
-p_xrayImage = document.getElementById('p_xrayImage');
+
+xrayImage = document.getElementById('xrayImage');
 
 imageChecker = document.getElementById("imageChecker")
-output = document.getElementById('output')
 
-p_xrayImage.addEventListener('change', function(event) {
-    output.textContent ="";
-  
+xrayImage.addEventListener('change', function(event) {
+    
     var file = event.target.files[0];
-  
-  
     var reader = new FileReader();
-  
     reader.onload = function(e) {
       var image = new Image();
     
       image.src = e.target.result;
-      displayImage.src = e.target.result;
-      displayImage.classList.add("display", "display-block");
+    
   
       image.onload = function() {
         var width = this.width;

@@ -1,5 +1,7 @@
 userIdSearch = document.querySelector('.userIdSearch')
 
+
+
 ID = document.getElementById('ID')
 function IDGget(btn){
 
@@ -11,3 +13,12 @@ function IDGget(btn){
     
     
 }
+
+
+
+
+
+
+
+
+

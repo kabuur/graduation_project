@@ -14,9 +14,22 @@ class Hospital(models.Model):
     
     
 class IndivitualUser(models.Model):
-    userName = models.CharField(max_length=200)
+    userName = models.CharField(max_length=200, unique=True)
     password = models.CharField(max_length=200)
+    tell = models.CharField(max_length=200)
+    name = models.CharField(max_length=200)
     active = models.BooleanField(default=False)
     
     def __str__(self) :
         return self.userName
+    
+    
+# class RegisterIndivitualUser(models.Model):
+#     userName = models.CharField(max_length=200)
+#     password = models.CharField(max_length=200)
+#     tell = models.CharField(max_length=200)
+#     name = models.CharField(max_length=200)
+#     active = models.BooleanField(default=False)
+    
+#     def __str__(self) :
+#         return self.userName
